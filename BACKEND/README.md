@@ -273,3 +273,155 @@ Email or password is incorrect.
 - Passwords are compared using bcrypt's `compareSync` method
 - JWT tokens are generated using `process.env.JWT_SECRET`
 - Returns generic error message "Invalid email or password" for both non-existent emails and incorrect passwords to prevent email enumeration attacks
+- Authentication token is stored in an HTTP-only, secure cookie with a 24-hour expiration
+
+---
+
+## User Profile Endpoint
+
+### Description
+
+This endpoint retrieves the profile information of the currently authenticated user. It requires a valid authentication token and returns the user's details.
+
+---
+
+### Endpoint Details
+
+**URL:** `/users/profile`
+
+**Method:** `GET`
+
+**Authentication:** Required (Bearer token or Cookie)
+
+---
+
+### Request Headers
+
+| Header          | Required | Description                           |
+| --------------- | -------- | ------------------------------------- |
+| `Authorization` | Yes      | Bearer token or via authentication cookie |
+
+---
+
+### Example Request
+
+```bash
+curl -X GET http://localhost:3000/users/profile \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+```
+
+---
+
+### Response Codes
+
+#### 200 - OK (Success)
+
+User profile retrieved successfully.
+
+**Response Body:**
+
+```json
+{
+  "user": {
+    "_id": "507f1f77bcf86cd799439011",
+    "fullname": {
+      "firstname": "John",
+      "lastname": "Doe"
+    },
+    "email": "john@example.com",
+    "socketId": null
+  }
+}
+```
+
+#### 401 - Unauthorized (Invalid or Missing Token)
+
+Authentication token is missing, invalid, or expired.
+
+**Response Body:**
+
+```json
+{
+  "error": "Unauthorized"
+}
+```
+
+---
+
+### Security Notes
+
+- Requires valid JWT authentication token
+- Token is verified by the `authMiddleware.authUser` middleware
+- User information is extracted from the authenticated token
+
+---
+
+## User Logout Endpoint
+
+### Description
+
+This endpoint logs out the currently authenticated user. It clears the authentication token from cookies and invalidates the session.
+
+---
+
+### Endpoint Details
+
+**URL:** `/users/logout`
+
+**Method:** `GET`
+
+**Authentication:** Required (Bearer token or Cookie)
+
+---
+
+### Request Headers
+
+| Header          | Required | Description                           |
+| --------------- | -------- | ------------------------------------- |
+| `Authorization` | Yes      | Bearer token or via authentication cookie |
+
+---
+
+### Example Request
+
+```bash
+curl -X GET http://localhost:3000/users/logout \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+```
+
+---
+
+### Response Codes
+
+#### 200 - OK (Success)
+
+User logged out successfully. The authentication token cookie is cleared.
+
+**Response Body:**
+
+```json
+{
+  "message": "Logged out successfully"
+}
+```
+
+#### 401 - Unauthorized (Invalid or Missing Token)
+
+Authentication token is missing, invalid, or expired.
+
+**Response Body:**
+
+```json
+{
+  "error": "Unauthorized"
+}
+```
+
+---
+
+### Security Notes
+
+- Requires valid JWT authentication token
+- Token is verified by the `authMiddleware.authUser` middleware
+- Authentication cookie is cleared with `httpOnly`, `secure`, and `sameSite` flags
+- No further requests can be made with the cleared token
