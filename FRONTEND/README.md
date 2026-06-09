@@ -1,234 +1,263 @@
-# API Documentation
+# 🚖 UBER CLONE
 
-## User Registration Endpoint
+<p align="center">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png" width="200"/>
+</p>
 
-### Description
+<p align="center">
+  A full-stack Uber-inspired ride booking application built with the MERN Stack.
+</p>
 
-This endpoint allows new users to register in the Uber Clone application. It validates the user input, hashes the password, creates a new user# UBER-CLONE
+<p align="center">
+  <img src="https://img.shields.io/badge/React-19-blue?logo=react">
+  <img src="https://img.shields.io/badge/Node.js-Backend-green?logo=node.js">
+  <img src="https://img.shields.io/badge/MongoDB-Database-green?logo=mongodb">
+  <img src="https://img.shields.io/badge/JWT-Authentication-orange">
+  <img src="https://img.shields.io/badge/TailwindCSS-Styling-38BDF8?logo=tailwindcss">
+</p>
 
-A simple Uber-inspired project with separate user and captain authentication flows. The app includes a landing page, user login/signup screens, and captain login/signup screens.
+---
 
-## Overview
+## 🌟 Project Overview
 
-This project is divided into two main parts:
+Uber Clone is a modern ride-booking application inspired by Uber. The project includes separate authentication flows for Users and Captains (Drivers), secure JWT authentication, MongoDB integration, and a responsive UI built with React and Tailwind CSS.
 
-- Frontend: React + Vite + Tailwind CSS
-- Backend: Node.js + Express + MongoDB + JWT authentication
+---
 
-## Main Features
+## ✨ Features
 
-- Home page with a modern Uber-style landing experience
-- User login page
-- User signup page
-- Captain login page
-- Captain signup page
-- Separate routes for users and captains
-- Backend support for registration and authentication
+### 👤 User Features
 
-## Pages Included
+* User Registration
+* User Login
+* JWT Authentication
+* Protected Routes
+* User Profile
+* User Logout
 
-### Home Page
-- Landing screen shown at the root route
-- Provides a starting point for users to continue to login
+### 🚖 Captain Features
+
+* Captain Registration
+* Captain Login
+* Vehicle Registration
+* Protected Routes
+* Captain Profile
+* Captain Logout
+
+### 🔒 Security Features
+
+* Password Hashing using bcrypt
+* JWT Authentication
+* Token Expiration (24 Hours)
+* Blacklisted Token Logout System
+* Protected API Routes
+
+---
+
+## 📸 Application Flow
 
 ### User Flow
-- User login: `/login`
-- User signup: `/signup`
-
-### Captain Flow
-- Captain login: `/captain-login`
-- Captain signup: `/captain-signup`
-
-## Project Structure
 
 ```text
-UBER-CLONE/
-├── BACKEND/
-│   ├── controllers/
-│   ├── models/
-│   ├── routes/
-│   ├── services/
+Home
+ ↓
+User Login
+ ↓
+User Signup
+ ↓
+User Profile
+```
+
+### Captain Flow
+
+```text
+Home
+ ↓
+Captain Login
+ ↓
+Captain Signup
+ ↓
+Captain Dashboard
+```
+
+---
+
+## 🛠️ Tech Stack
+
+### Frontend
+
+* React.js
+* Vite
+* React Router DOM
+* Tailwind CSS
+* Axios
+
+### Backend
+
+* Node.js
+* Express.js
+* MongoDB
+* Mongoose
+* JWT
+* bcrypt
+* express-validator
+* cookie-parser
+
+---
+
+## 📂 Project Structure
+
+```text
+UBER-CLONE
+│
+├── BACKEND
+│   ├── controllers
+│   ├── db
+│   ├── middlewares
+│   ├── models
+│   ├── routes
+│   ├── services
+│   ├── app.js
 │   └── server.js
-├── FRONTEND/
-│   ├── src/
-│   │   ├── pages/
-│   │   └── App.jsx
+│
+├── FRONTEND
+│   ├── public
+│   ├── src
+│   │   ├── pages
+│   │   ├── assets
+│   │   ├── App.jsx
+│   │   └── main.jsx
 │   └── package.json
+│
 └── README.md
 ```
 
-## Tech Stack
+---
 
-### Frontend
-- React
-- Vite
-- React Router DOM
-- Tailwind CSS
+## 🚀 Getting Started
 
-### Backend
-- Node.js
-- Express
-- MongoDB with Mongoose
-- JWT
-- bcrypt
-
-## Getting Started
-
-### Frontend
+### Clone Repository
 
 ```bash
-cd FRONTEND
-npm install
-npm run dev
+git clone https://github.com/yourusername/uber-clone.git
+cd uber-clone
 ```
 
-The frontend development server will start using Vite.
+---
 
-### Backend
+## ⚙️ Backend Setup
+
+### Install Dependencies
 
 ```bash
 cd BACKEND
 npm install
-node server.js
 ```
 
-## Notes
+### Create Environment Variables
 
-This project is a beginner-friendly clone that focuses on the UI and authentication flow for both users and captains. It can be extended later with ride booking, driver tracking, maps, and payments.
- in the database, and returns an authentication token.
+Create a `.env` file:
 
----
-
-### Endpoint Details
-
-**URL:** `/users/register`
-
-**Method:** `POST`
-
-**Content-Type:** `application/json`
-
----
-
-### Request Body
-
-The endpoint expects a JSON object with the following structure:
-
-```json
-{
-  "fullname": {
-    "firstname": "string",
-    "lastname": "string"
-  },
-  "email": "string",
-  "password": "string"
-}
+```env
+PORT=4000
+DB_CONNECT=mongodb://127.0.0.1:27017/uber-clone
+JWT_SECRET=your_secret_key
 ```
 
-#### Field Specifications
-
-| Field                | Type   | Required | Validation Rules                   |
-| -------------------- | ------ | -------- | ---------------------------------- |
-| `fullname.firstname` | string | Yes      | Minimum 3 characters               |
-| `fullname.lastname`  | string | No       | Minimum 3 characters (if provided) |
-| `email`              | string | Yes      | Must be a valid email format       |
-| `password`           | string | Yes      | Minimum 6 characters               |
-
----
-
-### Example Request
+### Start Backend
 
 ```bash
-curl -X POST http://localhost:3000/users/register \
-  -H "Content-Type: application/json" \
-  -d '{
-    "fullname": {
-      "firstname": "John",
-      "lastname": "Doe"
-    },
-    "email": "john@example.com",
-    "password": "securePassword123"
-  }'
+npm start
+```
+
+Server runs on:
+
+```text
+http://localhost:4000
 ```
 
 ---
 
-### Response Codes
+## 🎨 Frontend Setup
 
-#### 201 - Created (Success)
+### Install Dependencies
 
-User registered successfully. Returns authentication token and user data.
-
-**Response Body:**
-
-```json
-{
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-  "user": {
-    "_id": "507f1f77bcf86cd799439011",
-    "fullname": {
-      "firstname": "John",
-      "lastname": "Doe"
-    },
-    "email": "john@example.com",
-    "socketId": null
-  }
-}
+```bash
+cd FRONTEND
+npm install
 ```
 
-#### 400 - Bad Request (Validation Error)
+### Start Development Server
 
-One or more validation rules failed.
+```bash
+npm run dev
+```
 
-**Response Body:**
+Frontend runs on:
 
-```json
-{
-  "error": [
-    {
-      "type": "field",
-      "value": "",
-      "msg": "firstname must be 3 characters long",
-      "path": "fullname.firstname",
-      "location": "body"
-    },
-    {
-      "type": "field",
-      "value": "invalidemail",
-      "msg": "invalid Email",
-      "path": "email",
-      "location": "body"
-    }
-  ]
-}
+```text
+http://localhost:5173
 ```
 
 ---
 
-### Validation Error Messages
+## 📄 Pages
 
-| Field                | Error Message                         |
-| -------------------- | ------------------------------------- |
-| `email`              | "invalid Email"                       |
-| `fullname.firstname` | "firstname must be 3 characters long" |
-| `password`           | "password must be 6 characters long"  |
-
----
-
-### Security Notes
-
-- Passwords are hashed using bcrypt (salt rounds: 10) before being stored
-- JWT tokens are generated using `process.env.JWT_SECRET`
-- Email addresses must be unique in the database
+| Page           | Route           |
+| -------------- | --------------- |
+| Home           | /               |
+| User Login     | /login          |
+| User Signup    | /signup         |
+| Captain Login  | /captain-login  |
+| Captain Signup | /captain-signup |
 
 ---
 
-### Implementation Details
+## 🔐 Authentication
 
-**File Location:** `/controllers/user.constroller.js`
+The application uses JSON Web Tokens (JWT).
 
-**Dependencies:**
+### Authentication Flow
 
-- `express-validator` - For request validation
-- `bcrypt` - For password hashing
-- `jsonwebtoken` - For token generation
-- MongoDB/Mongoose - For database operations
+```text
+Register/Login
+        ↓
+Generate JWT
+        ↓
+Store Token
+        ↓
+Access Protected Routes
+        ↓
+Logout
+        ↓
+Blacklist Token
+```
+
+---
+
+## 🎯 Future Features
+
+* Ride Booking
+* Google Maps Integration
+* Real-Time Location Tracking
+* Socket.IO
+* Ride History
+* Fare Calculation
+* Online Payments
+* Captain Availability System
+
+---
+
+## 👨‍💻 Developer
+
+### Bhavy Patel
+
+MERN Stack Developer
+
+Built for learning modern full-stack web development using React, Node.js, Express, and MongoDB.
+
+---
+
+## ⭐ Support
+
+If you like this project, consider giving it a ⭐ on GitHub.
