@@ -1,95 +1,168 @@
-# 🚖 Uber Clone Backend API
+# API Documentation
 
-![Node.js](https://img.shields.io/badge/Node.js-Express-green)
-![MongoDB](https://img.shields.io/badge/Database-MongoDB-green)
-![JWT](https://img.shields.io/badge/Auth-JWT-orange)
-![License](https://img.shields.io/badge/License-MIT-blue)
+## User Registration Endpoint
 
-Backend API for the Uber Clone application built with Node.js, Express.js, MongoDB, JWT Authentication and Socket.IO.
+### Description
+
+This endpoint allows new users to register in the Uber Clone application. It validates the user input, hashes the password, creates a new user# UBER-CLONE
+
+A simple Uber-inspired project with separate user and captain authentication flows. The app includes a landing page, user login/signup screens, and captain login/signup screens.
+
+## Overview
+
+This project is divided into two main parts:
+
+- Frontend: React + Vite + Tailwind CSS
+- Backend: Node.js + Express + MongoDB + JWT authentication
+
+## Main Features
+
+- Home page with a modern Uber-style landing experience
+- User login page
+- User signup page
+- Captain login page
+- Captain signup page
+- Separate routes for users and captains
+- Backend support for registration and authentication
+
+## Pages Included
+
+### Home Page
+- Landing screen shown at the root route
+- Provides a starting point for users to continue to login
+
+### User Flow
+- User login: `/login`
+- User signup: `/signup`
+
+### Captain Flow
+- Captain login: `/captain-login`
+- Captain signup: `/captain-signup`
+
+## Project Structure
+
+```text
+UBER-CLONE/
+├── BACKEND/
+│   ├── controllers/
+│   ├── models/
+│   ├── routes/
+│   ├── services/
+│   └── server.js
+├── FRONTEND/
+│   ├── src/
+│   │   ├── pages/
+│   │   └── App.jsx
+│   └── package.json
+└── README.md
+```
+
+## Tech Stack
+
+### Frontend
+- React
+- Vite
+- React Router DOM
+- Tailwind CSS
+
+### Backend
+- Node.js
+- Express
+- MongoDB with Mongoose
+- JWT
+- bcrypt
+
+## Getting Started
+
+### Frontend
+
+```bash
+cd FRONTEND
+npm install
+npm run dev
+```
+
+The frontend development server will start using Vite.
+
+### Backend
+
+```bash
+cd BACKEND
+npm install
+node server.js
+```
+
+## Notes
+
+This project is a beginner-friendly clone that focuses on the UI and authentication flow for both users and captains. It can be extended later with ride booking, driver tracking, maps, and payments.
+ in the database, and returns an authentication token.
 
 ---
 
-## 📚 Table of Contents
+### Endpoint Details
 
-- User APIs
-  - Register User
-  - Login User
-  - User Profile
-  - Logout User
-- Captain APIs
-  - Register Captain
-  - Login Captain
-  - Captain Profile
-  - Logout Captain
-- Authentication
-- Error Handling
+**URL:** `/users/register`
 
-# 👤 User Registration Endpoint
+**Method:** `POST`
 
-## Description
-
-This endpoint allows new users to register in the Uber Clone application. It validates user information, hashes the password, creates a new user account, and returns an authentication token.
+**Content-Type:** `application/json`
 
 ---
 
-## Endpoint Details
+### Request Body
 
-| Property     | Value              |
-| ------------ | ------------------ |
-| URL          | `/users/register`  |
-| Method       | `POST`             |
-| Content-Type | `application/json` |
-
----
-
-## Request Body
+The endpoint expects a JSON object with the following structure:
 
 ```json
 {
   "fullname": {
-    "firstname": "John",
-    "lastname": "Doe"
+    "firstname": "string",
+    "lastname": "string"
   },
-  "email": "john@example.com",
-  "password": "securePassword123"
+  "email": "string",
+  "password": "string"
 }
 ```
 
-### Field Specifications
+#### Field Specifications
 
-| Field              | Type   | Required | Validation           |
-| ------------------ | ------ | -------- | -------------------- |
-| fullname.firstname | String | Yes      | Minimum 3 characters |
-| fullname.lastname  | String | No       | Minimum 3 characters |
-| email              | String | Yes      | Valid email format   |
-| password           | String | Yes      | Minimum 6 characters |
+| Field                | Type   | Required | Validation Rules                   |
+| -------------------- | ------ | -------- | ---------------------------------- |
+| `fullname.firstname` | string | Yes      | Minimum 3 characters               |
+| `fullname.lastname`  | string | No       | Minimum 3 characters (if provided) |
+| `email`              | string | Yes      | Must be a valid email format       |
+| `password`           | string | Yes      | Minimum 6 characters               |
 
 ---
 
-## Example Request
+### Example Request
 
 ```bash
 curl -X POST http://localhost:3000/users/register \
--H "Content-Type: application/json" \
--d '{
-  "fullname": {
-    "firstname": "John",
-    "lastname": "Doe"
-  },
-  "email": "john@example.com",
-  "password": "securePassword123"
-}'
+  -H "Content-Type: application/json" \
+  -d '{
+    "fullname": {
+      "firstname": "John",
+      "lastname": "Doe"
+    },
+    "email": "john@example.com",
+    "password": "securePassword123"
+  }'
 ```
 
 ---
 
-## Success Response
+### Response Codes
 
-### 201 Created
+#### 201 - Created (Success)
+
+User registered successfully. Returns authentication token and user data.
+
+**Response Body:**
 
 ```json
 {
-  "token": "jwt_token_here",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
   "user": {
     "_id": "507f1f77bcf86cd799439011",
     "fullname": {
@@ -102,688 +175,60 @@ curl -X POST http://localhost:3000/users/register \
 }
 ```
 
----
+#### 400 - Bad Request (Validation Error)
 
-## Error Responses
+One or more validation rules failed.
 
-### 400 Bad Request
+**Response Body:**
 
 ```json
 {
-  "errors": [
+  "error": [
     {
-      "msg": "firstname must be at least 3 characters long"
+      "type": "field",
+      "value": "",
+      "msg": "firstname must be 3 characters long",
+      "path": "fullname.firstname",
+      "location": "body"
+    },
+    {
+      "type": "field",
+      "value": "invalidemail",
+      "msg": "invalid Email",
+      "path": "email",
+      "location": "body"
     }
   ]
 }
 ```
 
-### 400 User Already Exists
+---
 
-```json
-{
-  "message": "User with this email already exists"
-}
-```
+### Validation Error Messages
+
+| Field                | Error Message                         |
+| -------------------- | ------------------------------------- |
+| `email`              | "invalid Email"                       |
+| `fullname.firstname` | "firstname must be 3 characters long" |
+| `password`           | "password must be 6 characters long"  |
 
 ---
 
-## Security Notes
+### Security Notes
 
-* Passwords are hashed using bcrypt with 10 salt rounds.
-* JWT tokens are generated using `JWT_SECRET`.
-* Email addresses must be unique.
-* Password field is never returned in API responses.
-
----
-
-# 🔐 User Login Endpoint
-
-## Description
-
-This endpoint allows registered users to log in to the Uber Clone application. It validates credentials, verifies the password, and returns an authentication token.
+- Passwords are hashed using bcrypt (salt rounds: 10) before being stored
+- JWT tokens are generated using `process.env.JWT_SECRET`
+- Email addresses must be unique in the database
 
 ---
 
-## Endpoint Details
+### Implementation Details
 
-| Property     | Value              |
-| ------------ | ------------------ |
-| URL          | `/users/login`     |
-| Method       | `POST`             |
-| Content-Type | `application/json` |
+**File Location:** `/controllers/user.constroller.js`
 
----
+**Dependencies:**
 
-## Request Body
-
-```json
-{
-  "email": "john@example.com",
-  "password": "securePassword123"
-}
-```
-
-### Field Specifications
-
-| Field    | Type   | Required | Validation           |
-| -------- | ------ | -------- | -------------------- |
-| email    | String | Yes      | Valid email format   |
-| password | String | Yes      | Minimum 6 characters |
-
----
-
-## Example Request
-
-```bash
-curl -X POST http://localhost:3000/users/login \
--H "Content-Type: application/json" \
--d '{
-  "email": "john@example.com",
-  "password": "securePassword123"
-}'
-```
-
----
-
-## Success Response
-
-### 200 OK
-
-```json
-{
-  "token": "jwt_token_here",
-  "user": {
-    "_id": "507f1f77bcf86cd799439011",
-    "fullname": {
-      "firstname": "John",
-      "lastname": "Doe"
-    },
-    "email": "john@example.com"
-  }
-}
-```
-
----
-
-## Error Responses
-
-### 400 Validation Error
-
-```json
-{
-  "errors": [
-    {
-      "msg": "invalid Email"
-    }
-  ]
-}
-```
-
-### 401 Unauthorized
-
-```json
-{
-  "message": "Invalid email or password"
-}
-```
-
----
-
-## Security Notes
-
-* Passwords are verified using bcrypt.
-* JWT tokens expire after 24 hours.
-* Invalid credentials return a generic error message.
-
----
-
-# 👤 User Profile Endpoint
-
-## Description
-
-Returns information about the currently authenticated user.
-
----
-
-## Endpoint Details
-
-| Property       | Value            |
-| -------------- | ---------------- |
-| URL            | `/users/profile` |
-| Method         | `GET`            |
-| Authentication | Required         |
-
----
-
-## Headers
-
-```http
-Authorization: Bearer <JWT_TOKEN>
-```
-
----
-
-## Example Request
-
-```bash
-curl -X GET http://localhost:3000/users/profile \
--H "Authorization: Bearer YOUR_TOKEN"
-```
-
----
-
-## Success Response
-
-### 200 OK
-
-```json
-{
-  "user": {
-    "_id": "507f1f77bcf86cd799439011",
-    "fullname": {
-      "firstname": "John",
-      "lastname": "Doe"
-    },
-    "email": "john@example.com"
-  }
-}
-```
-
----
-
-## Error Response
-
-### 401 Unauthorized
-
-```json
-{
-  "message": "Unauthorized"
-}
-```
-
----
-
-# 🚪 User Logout Endpoint
-
-## Description
-
-Logs out the currently authenticated user by clearing authentication cookies and invalidating the token.
-
----
-
-## Endpoint Details
-
-| Property       | Value           |
-| -------------- | --------------- |
-| URL            | `/users/logout` |
-| Method         | `GET`           |
-| Authentication | Required        |
-
----
-
-## Headers
-
-```http
-Authorization: Bearer <JWT_TOKEN>
-```
-
----
-
-## Example Request
-
-```bash
-curl -X GET http://localhost:3000/users/logout \
--H "Authorization: Bearer YOUR_TOKEN"
-```
-
----
-
-## Success Response
-
-### 200 OK
-
-```json
-{
-  "message": "Logged out successfully"
-}
-```
-
----
-
-## Error Response
-
-### 401 Unauthorized
-
-```json
-{
-  "message": "Unauthorized"
-}
-```
-
----
-
-## Security Notes
-
-* Requires a valid JWT token.
-* Authentication cookie is cleared during logout.
-* Logged-out tokens can no longer access protected routes.
-
-
-
-# 🚖 Captain Registration Endpoint
-
-## Description
-
-This endpoint allows new captains (drivers) to register in the Uber Clone application. It validates the captain's information, hashes the password, creates a new captain account in the database, and returns an authentication token.
-
----
-
-## Endpoint Details
-
-| Property     | Value                |
-| ------------ | -------------------- |
-| URL          | `/captains/register` |
-| Method       | `POST`               |
-| Content-Type | `application/json`   |
-
----
-
-## Request Body
-
-```json
-{
-  "fullname": {
-    "firstname": "John",
-    "lastname": "Doe"
-  },
-  "email": "john@example.com",
-  "password": "securePassword123",
-  "vehicle": {
-    "color": "White",
-    "plate": "GJ01AB1234",
-    "capacity": 4,
-    "vehicleType": "car"
-  }
-}
-```
-
-### Field Specifications
-
-| Field               | Type   | Required | Validation           |
-| ------------------- | ------ | -------- | -------------------- |
-| fullname.firstname  | String | Yes      | Minimum 3 characters |
-| fullname.lastname   | String | Yes      | Minimum 3 characters |
-| email               | String | Yes      | Valid email format   |
-| password            | String | Yes      | Minimum 6 characters |
-| vehicle.color       | String | Yes      | Minimum 3 characters |
-| vehicle.plate       | String | Yes      | Minimum 3 characters |
-| vehicle.capacity    | Number | Yes      | Minimum value 1      |
-| vehicle.vehicleType | String | Yes      | car, bike, auto      |
-
----
-
-## Example Request
-
-```bash
-curl -X POST http://localhost:3000/captains/register \
--H "Content-Type: application/json" \
--d '{
-  "fullname": {
-    "firstname": "John",
-    "lastname": "Doe"
-  },
-  "email": "john@example.com",
-  "password": "securePassword123",
-  "vehicle": {
-    "color": "White",
-    "plate": "GJ01AB1234",
-    "capacity": 4,
-    "vehicleType": "car"
-  }
-}'
-```
-
----
-
-## Success Response
-
-### 201 Created
-
-```json
-{
-  "token": "jwt_token_here",
-  "captain": {
-    "_id": "507f1f77bcf86cd799439011",
-    "fullname": {
-      "firstname": "John",
-      "lastname": "Doe"
-    },
-    "email": "john@example.com",
-    "status": "active",
-    "vehicle": {
-      "color": "White",
-      "plate": "GJ01AB1234",
-      "capacity": 4,
-      "vehicleType": "car"
-    }
-  }
-}
-```
-
----
-
-## Error Responses
-
-### 400 Bad Request
-
-```json
-{
-  "errors": [
-    {
-      "msg": "firstname must be at least 3 characters long"
-    }
-  ]
-}
-```
-
-### 400 Captain Already Exists
-
-```json
-{
-  "message": "Captain with this email already exists"
-}
-```
-
----
-
-## Security Notes
-
-* Passwords are hashed using bcrypt with 10 salt rounds.
-* JWT tokens are generated using `JWT_SECRET`.
-* Email addresses must be unique.
-* Password field is never returned in API responses.
-
----
-
-## Database Collection
-
-### Captains
-
-```js
-{
-  fullname: {
-    firstname: String,
-    lastname: String
-  },
-  email: String,
-  password: String,
-  socketId: String,
-  status: String,
-  vehicle: {
-    color: String,
-    plate: String,
-    capacity: Number,
-    vehicleType: String
-  },
-  location: {
-    lat: Number,
-    lng: Number
-  }
-}
-```
-
-# 🚖 Captain Login Endpoint
-
-## Description
-
-This endpoint allows registered captains to log in to the Uber Clone application. It validates captain credentials, verifies the password, generates a JWT token, and returns the captain details.
-
----
-
-## Endpoint Details
-
-| Property     | Value              |
-| ------------ | ------------------ |
-| URL          | `/captains/login`  |
-| Method       | `POST`             |
-| Content-Type | `application/json` |
-
----
-
-## Request Body
-
-```json
-{
-  "email": "captain@example.com",
-  "password": "securePassword123"
-}
-```
-
-### Field Specifications
-
-| Field    | Type   | Required | Validation           |
-| -------- | ------ | -------- | -------------------- |
-| email    | String | Yes      | Valid email format   |
-| password | String | Yes      | Minimum 6 characters |
-
----
-
-## Example Request
-
-```bash
-curl -X POST http://localhost:3000/captains/login \
--H "Content-Type: application/json" \
--d '{
-  "email": "captain@example.com",
-  "password": "securePassword123"
-}'
-```
-
----
-
-## Success Response
-
-### 200 OK
-
-```json
-{
-  "token": "jwt_token_here",
-  "captain": {
-    "_id": "507f1f77bcf86cd799439011",
-    "fullname": {
-      "firstname": "John",
-      "lastname": "Doe"
-    },
-    "email": "captain@example.com",
-    "status": "active",
-    "vehicle": {
-      "color": "White",
-      "plate": "GJ01AB1234",
-      "capacity": 4,
-      "vehicleType": "car"
-    }
-  }
-}
-```
-
----
-
-## Error Responses
-
-### 400 Validation Error
-
-```json
-{
-  "errors": [
-    {
-      "msg": "invalid email format"
-    }
-  ]
-}
-```
-
-### 401 Unauthorized
-
-```json
-{
-  "message": "Invalid email or password"
-}
-```
-
----
-
-## Security Notes
-
-* Passwords are verified using bcrypt.
-* JWT tokens are generated using `JWT_SECRET`.
-* Authentication token is also stored in an HTTP-only cookie.
-* Invalid credentials return a generic error message.
-
----
-
-# 👨‍✈️ Captain Profile Endpoint
-
-## Description
-
-Returns the profile information of the currently authenticated captain.
-
----
-
-## Endpoint Details
-
-| Property       | Value               |
-| -------------- | ------------------- |
-| URL            | `/captains/profile` |
-| Method         | `GET`               |
-| Authentication | Required            |
-
----
-
-## Headers
-
-```http
-Authorization: Bearer <JWT_TOKEN>
-```
-
----
-
-## Example Request
-
-```bash
-curl -X GET http://localhost:3000/captains/profile \
--H "Authorization: Bearer YOUR_TOKEN"
-```
-
----
-
-## Success Response
-
-### 200 OK
-
-```json
-{
-  "_id": "507f1f77bcf86cd799439011",
-  "fullname": {
-    "firstname": "John",
-    "lastname": "Doe"
-  },
-  "email": "captain@example.com",
-  "status": "active",
-  "vehicle": {
-    "color": "White",
-    "plate": "GJ01AB1234",
-    "capacity": 4,
-    "vehicleType": "car"
-  }
-}
-```
-
----
-
-## Error Response
-
-### 401 Unauthorized
-
-```json
-{
-  "error": "Unauthorized"
-}
-```
-
----
-
-## Security Notes
-
-* Requires a valid JWT token.
-* Token is verified using the `authCaptain` middleware.
-* Blacklisted tokens are rejected.
-
----
-
-# 🚪 Captain Logout Endpoint
-
-## Description
-
-Logs out the currently authenticated captain by invalidating the JWT token and clearing the authentication cookie.
-
----
-
-## Endpoint Details
-
-| Property       | Value              |
-| -------------- | ------------------ |
-| URL            | `/captains/logout` |
-| Method         | `GET`              |
-| Authentication | Required           |
-
----
-
-## Headers
-
-```http
-Authorization: Bearer <JWT_TOKEN>
-```
-
----
-
-## Example Request
-
-```bash
-curl -X GET http://localhost:3000/captains/logout \
--H "Authorization: Bearer YOUR_TOKEN"
-```
-
----
-
-## Success Response
-
-### 200 OK
-
-```json
-{
-  "message": "Logged out successfully"
-}
-```
-
----
-
-## Error Response
-
-### 401 Unauthorized
-
-```json
-{
-  "error": "Unauthorized"
-}
-```
-
----
-
-## Security Notes
-
-* Requires a valid JWT token.
-* The token is stored in the blacklist collection after logout.
-* Blacklisted tokens cannot be used again.
-* Authentication cookie is cleared during logout.
-* Protects against token reuse after logout.
+- `express-validator` - For request validation
+- `bcrypt` - For password hashing
+- `jsonwebtoken` - For token generation
+- MongoDB/Mongoose - For database operations
