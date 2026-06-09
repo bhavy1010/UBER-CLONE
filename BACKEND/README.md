@@ -532,3 +532,258 @@ curl -X POST http://localhost:3000/captains/register \
   }
 }
 ```
+
+# 🚖 Captain Login Endpoint
+
+## Description
+
+This endpoint allows registered captains to log in to the Uber Clone application. It validates captain credentials, verifies the password, generates a JWT token, and returns the captain details.
+
+---
+
+## Endpoint Details
+
+| Property     | Value              |
+| ------------ | ------------------ |
+| URL          | `/captains/login`  |
+| Method       | `POST`             |
+| Content-Type | `application/json` |
+
+---
+
+## Request Body
+
+```json
+{
+  "email": "captain@example.com",
+  "password": "securePassword123"
+}
+```
+
+### Field Specifications
+
+| Field    | Type   | Required | Validation           |
+| -------- | ------ | -------- | -------------------- |
+| email    | String | Yes      | Valid email format   |
+| password | String | Yes      | Minimum 6 characters |
+
+---
+
+## Example Request
+
+```bash
+curl -X POST http://localhost:3000/captains/login \
+-H "Content-Type: application/json" \
+-d '{
+  "email": "captain@example.com",
+  "password": "securePassword123"
+}'
+```
+
+---
+
+## Success Response
+
+### 200 OK
+
+```json
+{
+  "token": "jwt_token_here",
+  "captain": {
+    "_id": "507f1f77bcf86cd799439011",
+    "fullname": {
+      "firstname": "John",
+      "lastname": "Doe"
+    },
+    "email": "captain@example.com",
+    "status": "active",
+    "vehicle": {
+      "color": "White",
+      "plate": "GJ01AB1234",
+      "capacity": 4,
+      "vehicleType": "car"
+    }
+  }
+}
+```
+
+---
+
+## Error Responses
+
+### 400 Validation Error
+
+```json
+{
+  "errors": [
+    {
+      "msg": "invalid email format"
+    }
+  ]
+}
+```
+
+### 401 Unauthorized
+
+```json
+{
+  "message": "Invalid email or password"
+}
+```
+
+---
+
+## Security Notes
+
+* Passwords are verified using bcrypt.
+* JWT tokens are generated using `JWT_SECRET`.
+* Authentication token is also stored in an HTTP-only cookie.
+* Invalid credentials return a generic error message.
+
+---
+
+# 👨‍✈️ Captain Profile Endpoint
+
+## Description
+
+Returns the profile information of the currently authenticated captain.
+
+---
+
+## Endpoint Details
+
+| Property       | Value               |
+| -------------- | ------------------- |
+| URL            | `/captains/profile` |
+| Method         | `GET`               |
+| Authentication | Required            |
+
+---
+
+## Headers
+
+```http
+Authorization: Bearer <JWT_TOKEN>
+```
+
+---
+
+## Example Request
+
+```bash
+curl -X GET http://localhost:3000/captains/profile \
+-H "Authorization: Bearer YOUR_TOKEN"
+```
+
+---
+
+## Success Response
+
+### 200 OK
+
+```json
+{
+  "_id": "507f1f77bcf86cd799439011",
+  "fullname": {
+    "firstname": "John",
+    "lastname": "Doe"
+  },
+  "email": "captain@example.com",
+  "status": "active",
+  "vehicle": {
+    "color": "White",
+    "plate": "GJ01AB1234",
+    "capacity": 4,
+    "vehicleType": "car"
+  }
+}
+```
+
+---
+
+## Error Response
+
+### 401 Unauthorized
+
+```json
+{
+  "error": "Unauthorized"
+}
+```
+
+---
+
+## Security Notes
+
+* Requires a valid JWT token.
+* Token is verified using the `authCaptain` middleware.
+* Blacklisted tokens are rejected.
+
+---
+
+# 🚪 Captain Logout Endpoint
+
+## Description
+
+Logs out the currently authenticated captain by invalidating the JWT token and clearing the authentication cookie.
+
+---
+
+## Endpoint Details
+
+| Property       | Value              |
+| -------------- | ------------------ |
+| URL            | `/captains/logout` |
+| Method         | `GET`              |
+| Authentication | Required           |
+
+---
+
+## Headers
+
+```http
+Authorization: Bearer <JWT_TOKEN>
+```
+
+---
+
+## Example Request
+
+```bash
+curl -X GET http://localhost:3000/captains/logout \
+-H "Authorization: Bearer YOUR_TOKEN"
+```
+
+---
+
+## Success Response
+
+### 200 OK
+
+```json
+{
+  "message": "Logged out successfully"
+}
+```
+
+---
+
+## Error Response
+
+### 401 Unauthorized
+
+```json
+{
+  "error": "Unauthorized"
+}
+```
+
+---
+
+## Security Notes
+
+* Requires a valid JWT token.
+* The token is stored in the blacklist collection after logout.
+* Blacklisted tokens cannot be used again.
+* Authentication cookie is cleared during logout.
+* Protects against token reuse after logout.
