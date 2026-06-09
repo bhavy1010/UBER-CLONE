@@ -42,7 +42,13 @@ module.exports.loginUser = async (req, res, next) => {
         });
     }
     
-    const { email, password } = req.body;
+    const {fullname ,  email, password } = req.body;
+
+    const isuser = await userservice.findOne({email});
+
+    if(isuser){
+        return res.status(400).json({ message: 'User with this email already exists' });
+    }
 
     const user = await userService.findUserByEmail(email);
 
