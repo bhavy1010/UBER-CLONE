@@ -30,10 +30,10 @@ module.exports.registerUser = async (req, res, next) => {
         token,
         user
     });
-
-}
+};
 
 module.exports.loginUser = async (req, res, next) => {
+
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
@@ -41,14 +41,8 @@ module.exports.loginUser = async (req, res, next) => {
             error: errors.array()
         });
     }
-    
-    const {fullname ,  email, password } = req.body;
 
-    const isuser = await userservice.findOne({email});
-
-    if(isuser){
-        return res.status(400).json({ message: 'User with this email already exists' });
-    }
+    const { email, password } = req.body;
 
     const user = await userService.findUserByEmail(email);
 
@@ -72,25 +66,37 @@ module.exports.loginUser = async (req, res, next) => {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "strict",
-        maxAge: 24 * 60 * 60 * 1000 // 24 hours
+        maxAge: 24 * 60 * 60 * 1000
     });
-
 
     res.status(200).json({
         token,
         user
     });
-}
+};
 
 module.exports.getUserProfile = async (req, res, next) => {
+
     res.status(200).json({
         user: req.user
     });
-}
+
+};
 
 module.exports.logoutUser = async (req, res, next) => {
+
+    const token =
+        req.cookies.token ||
+        req.headers.authorization?.split(" ")[1];
+
+    await blacklistTokenModel.create({
+        token
+    });
+
     res.clearCookie("token");
+
     res.status(200).json({
         message: "Logged out successfully"
     });
-}
+
+};

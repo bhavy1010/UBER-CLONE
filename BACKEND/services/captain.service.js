@@ -1,8 +1,8 @@
 const captainModel = require("../models/captain.model");
 
 module.exports.createCaptain = async ({
-    firstName,
-    lstName,
+    firstname,
+    lastname,
     email,
     password,
     color,
@@ -12,8 +12,7 @@ module.exports.createCaptain = async ({
 }) => {
 
     if (
-        !firstName ||
-        !lstName ||
+        !firstname ||
         !email ||
         !password ||
         !color ||
@@ -26,13 +25,11 @@ module.exports.createCaptain = async ({
 
     const captain = await captainModel.create({
         fullname: {
-            firstname: firstName,
-            lastname: lstName
+            firstname,
+            lastname
         },
-
         email,
         password,
-
         vehicle: {
             color,
             plate,
@@ -42,4 +39,12 @@ module.exports.createCaptain = async ({
     });
 
     return captain;
+};
+
+module.exports.findCaptainByEmail = async (email) => {
+
+    return await captainModel
+        .findOne({ email })
+        .select("+password");
+
 };

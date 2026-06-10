@@ -1,13 +1,20 @@
-import React, { useState } from 'react';
-import { Link } from "react-router-dom";
+import React, { useState, useContext } from 'react';
+import { Link, useNavigate } from "react-router-dom";
+import axios from 'axios';
+import { CaptainDataContext } from '../context/CaptainContext';
 
 const App = () => {
+
+    const navigate = useNavigate();
+
+    const [captain, setCaptain] = useContext(CaptainDataContext);
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [captainData, setCaptainData] = useState({});
 
-    const submitHandler = (e) => {
+    const submitHandler = async (e) => {
+
         e.preventDefault();
 
         const data = {
@@ -15,7 +22,29 @@ const App = () => {
             password
         };
 
-        console.log(data);
+        try {
+
+            const response = await axios.post(
+                `${import.meta.env.VITE_BASE_URL}/captains/login`,
+                data
+            );
+
+            if (response.status === 200) {
+
+                const responseData = response.data;
+
+                localStorage.setItem('token', responseData.token);
+
+                setCaptain(responseData.captain);
+
+                navigate('/captain-home');
+            }
+
+        } catch (error) {
+
+            console.log(error);
+
+        }
 
         setCaptainData(data);
 
@@ -33,7 +62,7 @@ const App = () => {
                     <img
                         className='w-16 mb-3'
                         src='https://freelogopng.com/images/all_img/1659761425uber-driver-logo-png.png'
-                        alt='Uber Logo'
+                        alt='Uber Driver Logo'
                     />
 
                     <h3 className='text-lg font-medium mb-2'>

@@ -1,16 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from "react-router-dom";
+import axios from 'axios';
+import { UserDataContext } from '../context/UserContext';
 
 const UserSignup = () => {
 
     const navigate = useNavigate();
+
+    const [user, setUser] = useContext(UserDataContext);
 
     const [firstname, setFirstname] = useState('');
     const [lastname, setLastname] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const submitHandler = (e) => {
+    const submitHandler = async (e) => {
+
         e.preventDefault();
 
         const newUser = {
@@ -22,14 +27,34 @@ const UserSignup = () => {
             password
         };
 
-        console.log(newUser);
+        try {
+
+            const response = await axios.post(
+                `${import.meta.env.VITE_BASE_URL}/users/register`,
+                newUser
+            );
+
+            if (response.status === 201) {
+
+                const data = response.data;
+
+                localStorage.setItem('token', data.token);
+
+                setUser(data.user);
+
+                navigate('/home');
+            }
+
+        } catch (error) {
+
+            console.log(error);
+
+        }
 
         setFirstname('');
         setLastname('');
         setEmail('');
         setPassword('');
-
-        navigate('/login');
     };
 
     return (
@@ -50,6 +75,7 @@ const UserSignup = () => {
                     </h3>
 
                     <div className='flex gap-4 mb-5'>
+
                         <input
                             value={firstname}
                             onChange={(e) => setFirstname(e.target.value)}
@@ -66,6 +92,7 @@ const UserSignup = () => {
                             type='text'
                             placeholder='Last Name'
                         />
+
                     </div>
 
                     <h3 className='text-lg font-medium mb-2'>
@@ -103,7 +130,10 @@ const UserSignup = () => {
 
                     <p className='text-center mt-2'>
                         Already have an account?{' '}
-                        <Link to="/login" className='text-blue-600'>
+                        <Link
+                            to="/login"
+                            className='text-blue-600'
+                        >
                             Login here
                         </Link>
                     </p>
@@ -113,10 +143,10 @@ const UserSignup = () => {
             </div>
 
             <p className='text-[11px] text-gray-600 mt-8 mb-4 leading-4'>
-    By proceeding, you consent to receive calls, WhatsApp messages, or SMS,
-    including automated messages, from Uber and its affiliates at the number
-    provided.
-</p>
+                By proceeding, you consent to receive calls, WhatsApp messages,
+                or SMS, including automated messages, from Uber and its affiliates
+                at the number provided.
+            </p>
 
         </div>
     );

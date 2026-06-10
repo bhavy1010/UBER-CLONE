@@ -1,9 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from "react-router-dom";
+import axios from 'axios';
+import { CaptainDataContext } from '../context/CaptainContext';
 
 const CaptainSignup = () => {
 
     const navigate = useNavigate();
+
+    const [captain, setCaptain] = useContext(CaptainDataContext);
 
     const [firstname, setFirstname] = useState('');
     const [lastname, setLastname] = useState('');
@@ -15,7 +19,8 @@ const CaptainSignup = () => {
     const [vehicleCapacity, setVehicleCapacity] = useState('');
     const [vehicleType, setVehicleType] = useState('');
 
-    const submitHandler = (e) => {
+    const submitHandler = async (e) => {
+
         e.preventDefault();
 
         const captainData = {
@@ -28,12 +33,34 @@ const CaptainSignup = () => {
             vehicle: {
                 color: vehicleColor,
                 plate: vehiclePlate,
-                capacity: vehicleCapacity,
+                capacity: Number(vehicleCapacity),
                 vehicleType
             }
         };
 
-        console.log(captainData);
+        try {
+
+            const response = await axios.post(
+                `${import.meta.env.VITE_BASE_URL}/captains/register`,
+                captainData
+            );
+
+            if (response.status === 201) {
+
+                const data = response.data;
+
+                localStorage.setItem('token', data.token);
+
+                setCaptain(data.captain);
+
+                navigate('/captain-home');
+            }
+
+        } catch (error) {
+
+            console.log(error);
+
+        }
 
         setFirstname('');
         setLastname('');
@@ -43,8 +70,6 @@ const CaptainSignup = () => {
         setVehiclePlate('');
         setVehicleCapacity('');
         setVehicleType('');
-
-        navigate('/captain-login');
     };
 
     return (
@@ -170,11 +195,11 @@ const CaptainSignup = () => {
 
             </div>
 
-           <p className='text-[11px] text-gray-600 mt-8 mb-4 pb-5 leading-4'>
-    By proceeding, you consent to receive calls, WhatsApp messages, or SMS,
-    including automated messages, from Uber and its affiliates at the number
-    provided.
-</p>
+            <p className='text-[11px] text-gray-600 mt-8 mb-4 pb-5 leading-4'>
+                By proceeding, you consent to receive calls, WhatsApp messages,
+                or SMS, including automated messages, from Uber and its affiliates
+                at the number provided.
+            </p>
 
         </div>
     );
