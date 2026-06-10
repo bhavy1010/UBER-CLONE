@@ -261,3 +261,152 @@ Built for learning modern full-stack web development using React, Node.js, Expre
 ## ⭐ Support
 
 If you like this project, consider giving it a ⭐ on GitHub.
+
+
+# 🔗 User & Captain Authentication Integration
+
+Today the application was integrated with the backend authentication APIs for both Users and Captains.
+
+## User Flow
+
+### User Signup
+
+When a user submits the signup form:
+
+```http
+POST /users/register
+```
+
+* User details are sent to the backend using Axios.
+* The backend creates a new user account.
+* A JWT token is returned.
+* The token is stored in `localStorage`.
+* User data is stored in `UserContext`.
+* The user is automatically redirected to:
+
+```text
+/home
+```
+
+### User Login
+
+When a user logs in:
+
+```http
+POST /users/login
+```
+
+* Credentials are verified by the backend.
+* A JWT token is returned.
+* The token is stored in `localStorage`.
+* User information is stored in `UserContext`.
+* The user is redirected to:
+
+```text
+/home
+```
+
+---
+
+## Captain Flow
+
+### Captain Signup
+
+When a captain submits the signup form:
+
+```http
+POST /captains/register
+```
+
+* Captain details and vehicle information are sent to the backend.
+* The backend creates a new captain account.
+* A JWT token is returned.
+* The token is stored in `localStorage`.
+* Captain data is stored in `CaptainContext`.
+* The captain is automatically redirected to:
+
+```text
+/captain-home
+```
+
+### Captain Login
+
+When a captain logs in:
+
+```http
+POST /captains/login
+```
+
+* Credentials are verified by the backend.
+* A JWT token is returned.
+* The token is stored in `localStorage`.
+* Captain information is stored in `CaptainContext`.
+* The captain is redirected to:
+
+```text
+/captain-home
+```
+
+---
+
+## Protected Routes
+
+### User Protected Routes
+
+The `UserProtectWrapper`:
+
+* Checks for JWT token in `localStorage`
+* Calls:
+
+```http
+GET /users/profile
+```
+
+* If the token is valid, the requested page is rendered.
+* If the token is invalid or missing, the user is redirected to:
+
+```text
+/login
+```
+
+### Captain Protected Routes
+
+The `CaptainProtectWrapper`:
+
+* Checks for JWT token in `localStorage`
+* Calls:
+
+```http
+GET /captains/profile
+```
+
+* If the token is valid, the requested page is rendered.
+* If the token is invalid or missing, the captain is redirected to:
+
+```text
+/captain-login
+```
+
+---
+
+## React Context Integration
+
+Two separate Context APIs are used:
+
+### User Context
+
+```text
+UserDataContext
+```
+
+Stores authenticated user information across the application.
+
+### Captain Context
+
+```text
+CaptainDataContext
+```
+
+Stores authenticated captain information across the application.
+
+This separation ensures that User and Captain authentication states remain independent throughout the application.
