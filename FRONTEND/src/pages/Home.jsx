@@ -79,7 +79,6 @@ const Home = () => {
 
   }, [vehicalePanel]);
 
-
    useGSAP(() => {
 
     if (confirmRidePanel) {
@@ -146,10 +145,10 @@ const Home = () => {
         alt='Uber Logo'
       />    
 
-      <div className='h-screen w-screen'>
+       <div className='h-screen w-screen'>
         <img
-          className='h-full w-full object-cover'
-          src='https://s.wsj.net/public/resources/images/BN-XR453_201802_M_20180228165619.gif'
+          className=' -mt-9 h-full w-full object-cover'
+          src='https://i.sstatic.net/fKePl.gif'
           alt='map-demo'
         />
       </div>

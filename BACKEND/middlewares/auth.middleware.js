@@ -5,9 +5,14 @@ const jwt = require("jsonwebtoken");
 
 module.exports.authUser = async (req, res, next) => {
 
+    console.log("========== AUTH USER ==========");
+    console.log("Authorization Header:", req.headers.authorization);
+
     const token =
         req.cookies?.token ||
         req.headers.authorization?.split(" ")[1];
+
+    console.log("Extracted Token:", token);
 
     if (!token) {
         return res.status(401).json({
@@ -16,6 +21,8 @@ module.exports.authUser = async (req, res, next) => {
     }
 
     const isBlacklisted = await blacklistTokenModel.findOne({ token });
+
+    console.log("Blacklisted:", isBlacklisted);
 
     if (isBlacklisted) {
         return res.status(401).json({
@@ -30,7 +37,11 @@ module.exports.authUser = async (req, res, next) => {
             process.env.JWT_SECRET
         );
 
+        console.log("Decoded JWT:", decoded);
+
         const user = await userModel.findById(decoded._id);
+
+        console.log("Found User:", user);
 
         if (!user) {
             return res.status(401).json({
@@ -44,6 +55,8 @@ module.exports.authUser = async (req, res, next) => {
 
     } catch (err) {
 
+        console.log("JWT ERROR:", err.message);
+
         return res.status(401).json({
             error: "Unauthorized"
         });
@@ -56,6 +69,9 @@ module.exports.authCaptain = async (req, res, next) => {
     const token =
         req.cookies?.token ||
         req.headers.authorization?.split(" ")[1];
+
+        
+
 
     if (!token) {
         return res.status(401).json({
