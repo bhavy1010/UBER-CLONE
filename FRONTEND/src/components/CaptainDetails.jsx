@@ -20,13 +20,17 @@ const CaptainDetails = () => {
                         />
 
                         <h4 className='capitalize text-lg font-semibold text-gray-800'>
-                            {captain?.fullname?.firstname + " " + captain?.fullname?.lastname || "Captain"}
+                            {captain?.fullname
+                                ? `${captain.fullname.firstname} ${captain.fullname.lastname || ''}`
+                                : 'Captain'}
                         </h4>
 
                     </div>
 
                     <div>
-                        <h4 className='font-semibold text-xl'>₹295.5</h4>
+                        <h4 className='font-semibold text-xl'>
+                            ₹{captain?.totalEarnings || 0}
+                        </h4>
                         <p>Earned</p>
                     </div>
 
@@ -36,20 +40,38 @@ const CaptainDetails = () => {
 
                     <div className='text-center'>
                         <i className="text-2xl font-thin ri-time-line"></i>
-                        <h5 className='text-lg font-medium'>10.3</h5>
-                        <p className='text-sm text-gray-800'>Hours Online</p>
+
+                        <h5 className='text-lg font-medium'>
+                            {captain?.hoursOnline || 0}
+                        </h5>
+
+                        <p className='text-sm text-gray-800'>
+                            Hours Online
+                        </p>
                     </div>
 
                     <div className='text-center'>
                         <i className="text-2xl font-thin ri-speed-up-line"></i>
-                        <h5 className='text-lg font-medium'>10.3</h5>
-                        <p className='text-sm text-gray-800'>Total Trips</p>
+
+                        <h5 className='text-lg font-medium'>
+                            {captain?.totalTrips || 0}
+                        </h5>
+
+                        <p className='text-sm text-gray-800'>
+                            Total Trips
+                        </p>
                     </div>
 
                     <div className='text-center'>
                         <i className="text-2xl font-thin ri-booklet-line"></i>
-                        <h5 className='text-lg font-medium'>10.3</h5>
-                        <p className='text-sm text-gray-800'>Ratings</p>
+
+                        <h5 className='text-lg font-medium'>
+                            4.9
+                        </h5>
+
+                        <p className='text-sm text-gray-800'>
+                            Ratings
+                        </p>
                     </div>
 
                 </div>

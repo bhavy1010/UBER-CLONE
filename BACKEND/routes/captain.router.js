@@ -4,6 +4,7 @@ const {body} = require("express-validator");
 const captainController = require("../controllers/captain.controller");
 const authMiddleware = require("../middlewares/auth.middleware");
 
+
 router.post("/register" , [
     body("fullname").isLength({min : 3}).withMessage("fullname should be at least 3 characters"),
     body("email").isEmail().withMessage("invalid email format"),
@@ -23,5 +24,11 @@ router.post("/login" , [
 router.get("/profile" , authMiddleware.authCaptain , captainController.getCaptainProfile) ;
 
 router.get("/logout" , authMiddleware.authCaptain , captainController.logoutCaptain) ;
+
+router.post(
+    "/update-stats",
+    authMiddleware.authCaptain,
+    captainController.updateStats
+);
 
 module.exports = router;

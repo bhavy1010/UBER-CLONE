@@ -110,3 +110,32 @@ module.exports.logoutCaptain = async (req, res, next) => {
         message: "Logged out successfully"
     });
 };
+
+module.exports.updateStats = async (req, res) => {
+    try {
+
+        const captain = req.captain;
+
+        captain.totalEarnings =
+            (captain.totalEarnings || 0) +
+            Number(req.body.fare || 0);
+
+        captain.totalTrips =
+            (captain.totalTrips || 0) + 1;
+
+        await captain.save();
+
+        res.status(200).json({
+            success: true,
+            captain
+        });
+
+    } catch (error) {
+
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+
+    }
+};

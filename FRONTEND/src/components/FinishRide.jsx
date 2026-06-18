@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import { CaptainDataContext } from '../context/CaptainContext';
 
 
@@ -21,26 +22,32 @@ const FinishRide = ({ ride, setFinishRidePanel }) => {
 
     const fare = ride?.fare || 0;
 
-    const completeRide = () => {
+    const completeRide = async () => {
 
-    const updatedCaptain = {
-        ...captain,
-        totalEarnings:
-            (captain?.totalEarnings || 0) + fare,
-        totalTrips:
-            (captain?.totalTrips || 0) + 1
-    };
+    try {
 
-    setCaptain(updatedCaptain);
+        await axios.post(
+            `${import.meta.env.VITE_BASE_URL}/captains/update-stats`,
+            {
+                fare: ride?.fare || 0
+            },
+            {
+                headers: {
+                    Authorization:
+                        `Bearer ${localStorage.getItem("token")}`
+                }
+            }
+        );
 
-    localStorage.setItem(
-        "captain",
-        JSON.stringify(updatedCaptain)
-    );
+        localStorage.removeItem("currentRide");
 
-    localStorage.removeItem("currentRide");
+        navigate("/captain-home");
 
-    navigate("/captain-home");
+    } catch (error) {
+
+        console.log(error);
+
+    }
 };
 
     return (
