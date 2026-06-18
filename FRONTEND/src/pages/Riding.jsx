@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from "react-router-dom";
+import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
 
 const Riding = () => {
+
+    const navigate = useNavigate();
 
     const [ride, setRide] = useState(null);
 
@@ -15,6 +18,52 @@ const Riding = () => {
         }
 
     }, []);
+
+    const handlePayment = async () => {
+
+    const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/payments/create-order`,
+        {
+            amount: ride.fare
+        }
+    );
+
+    const order = response.data;
+
+    const options = {
+
+        key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+
+        amount: order.amount,
+
+        currency: order.currency,
+
+        name: "Uber Clone",
+
+        description: "Ride Payment",
+
+        order_id: order.id,
+
+        handler: function (response) {
+
+            alert("Payment Successful");
+
+            localStorage.removeItem("currentRide");
+
+            navigate("/home");
+        },
+
+        theme: {
+            color: "#000000"
+        }
+
+    };
+
+    const razorpay =
+    new window.Razorpay(options);
+
+    razorpay.open();
+};
 
     return (
         <div>
@@ -101,6 +150,7 @@ const Riding = () => {
                     </div>
 
                     <button
+                        onClick={handlePayment}
                         className='bg-[#d4cd00d0] flex items-center justify-center rounded mt-6 px-4 py-2 w-full text-lg text-[#130000]'
                     >
                         Make Payment
