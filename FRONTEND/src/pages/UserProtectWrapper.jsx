@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { UserDataContext } from '../context/UserContext';
 
 const UserProtectWrapper = ({ children }) => {
 
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
+    const [, setUser] = useContext(UserDataContext);
 
     useEffect(() => {
 
@@ -30,6 +32,7 @@ const UserProtectWrapper = ({ children }) => {
                 );
 
                 if (response.status === 200) {
+                    setUser(response.data.user);
                     setLoading(false);
                 }
 

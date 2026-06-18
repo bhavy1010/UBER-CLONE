@@ -7,8 +7,7 @@ const App = () => {
 
     const navigate = useNavigate();
 
-    const [captain, setCaptain] = useContext(CaptainDataContext);
-
+    const { captain, setCaptain } = useContext(CaptainDataContext); 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [captainData, setCaptainData] = useState({});

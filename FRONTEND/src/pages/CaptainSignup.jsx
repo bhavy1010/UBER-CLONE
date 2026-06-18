@@ -7,7 +7,7 @@ const CaptainSignup = () => {
 
     const navigate = useNavigate();
 
-    const [captain, setCaptain] = useContext(CaptainDataContext);
+    const { captain, setCaptain } = useContext(CaptainDataContext);
 
     const [firstname, setFirstname] = useState('');
     const [lastname, setLastname] = useState('');

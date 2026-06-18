@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { CaptainDataContext } from '../context/CaptainContext';
 
 const CaptainProtectWrapper = ({ children }) => {
 
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
+    const { setCaptain } = useContext(CaptainDataContext);
 
     useEffect(() => {
 
@@ -30,6 +32,7 @@ const CaptainProtectWrapper = ({ children }) => {
                 );
 
                 if (response.status === 200) {
+                    setCaptain(response.data);
                     setLoading(false);
                 }
 

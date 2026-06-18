@@ -1,7 +1,7 @@
 import React from 'react'
 
-const VehicalePanel = ({  setVehicalePanel, setConfirmRidePanel}) => {
-
+const VehicalePanel = ({  setVehicalePanel, setConfirmRidePanel ,fare ,setVehicleType ,setSelectedFare}) => {
+  
   return (
     <div>
 
@@ -19,7 +19,10 @@ const VehicalePanel = ({  setVehicalePanel, setConfirmRidePanel}) => {
       </h3>
 
       <div onClick={() => {
-        setConfirmRidePanel(true)
+          setVehicleType("car");
+          // createRide("car");
+          setSelectedFare(fare.car);
+          setConfirmRidePanel(true);
       }}
        className='flex w-full border-2 mb-2 active:border-black rounded-xl items-center justify-between p-2 h-20 cursor-pointer'>
 
@@ -44,13 +47,16 @@ const VehicalePanel = ({  setVehicalePanel, setConfirmRidePanel}) => {
         </div>
 
         <h2 className='text-lg font-semibold'>
-          ₹263.68
+           ₹{fare?.fare?.car}
         </h2>
 
       </div>
 
       <div onClick={() => {
-        setConfirmRidePanel(true)
+          setVehicleType("moto");
+          //createRide("moto");
+          setSelectedFare(fare.moto);
+          setConfirmRidePanel(true);
       }} className='flex w-full border-2 mb-2 active:border-black rounded-xl items-center justify-between p-2 h-20 cursor-pointer'>
 
         <img
@@ -74,13 +80,16 @@ const VehicalePanel = ({  setVehicalePanel, setConfirmRidePanel}) => {
         </div>
 
         <h2 className='text-lg font-semibold'>
-          ₹68.23
+           ₹{fare?.fare?.moto}
         </h2>
 
       </div>
 
       <div onClick={() => {
-        setConfirmRidePanel(true)
+          setVehicleType("auto");
+          //createRide("auto");
+          setSelectedFare(fare.auto);
+          setConfirmRidePanel(true);
       }} className='flex w-full border-2 mb-2 active:border-black rounded-xl items-center justify-between p-2 h-20 cursor-pointer'>
 
         <img
@@ -104,7 +113,7 @@ const VehicalePanel = ({  setVehicalePanel, setConfirmRidePanel}) => {
         </div>
 
         <h2 className='text-lg font-semibold'>
-          ₹135.07
+           ₹{fare?.fare?.auto}
         </h2>
 
       </div>

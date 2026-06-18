@@ -56,9 +56,6 @@ module.exports.getDistanceTime = async (
 
     try {
 
-        console.log("========== ROUTE REQUEST ==========");
-        console.log("Origin:", originLat, originLng);
-        console.log("Destination:", destLat, destLng);
 
         const url =
             `https://api.geoapify.com/v1/routing` +
@@ -70,8 +67,7 @@ module.exports.getDistanceTime = async (
 
         const response = await axios.get(url);
 
-        console.log("Geoapify Response:");
-        console.log(JSON.stringify(response.data, null, 2));
+        
 
         const route =
             response.data.features[0].properties;
@@ -105,11 +101,7 @@ module.exports.getDistanceTime = async (
 
     } catch (error) {
 
-        console.log("========== ROUTE ERROR ==========");
-
-        console.log(
-            error.response?.data || error.message
-        );
+        
 
         throw new Error(
             error.response?.data?.message ||

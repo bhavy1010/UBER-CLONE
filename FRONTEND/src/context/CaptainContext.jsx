@@ -4,22 +4,15 @@ export const CaptainDataContext = createContext();
 
 const CaptainContext = ({ children }) => {
 
-    const [captain, setCaptain] = useState({
-        email: '',
-        fullname: {
-            firstname: '',
-            lastname: ''
-        },
-        vehicle: {
-            color: '',
-            plate: '',
-            capacity: '',
-            vehicleType: ''
-        }
-    });
+    const [captain, setCaptain] = useState(null);
 
     return (
-        <CaptainDataContext.Provider value={[captain, setCaptain]}>
+        <CaptainDataContext.Provider
+            value={{
+                captain,
+                setCaptain
+            }}
+        >
             {children}
         </CaptainDataContext.Provider>
     );
