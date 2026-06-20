@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import LiveMap from '../components/LiveMap';
 
 const Riding = () => {
 
@@ -21,58 +22,63 @@ const Riding = () => {
 
     const handlePayment = async () => {
 
-    const response = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/payments/create-order`,
-        {
-            amount: ride.fare
-        }
-    );
+        if (!ride) return;
 
-    const order = response.data;
+        const response = await axios.post(
+            `${import.meta.env.VITE_BASE_URL}/payments/create-order`,
+            {
+                amount: ride.fare
+            }
+        );
 
-    const options = {
+        const order = response.data;
 
-        key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+        const options = {
+            key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+            amount: order.amount,
+            currency: order.currency,
+            name: "Uber Clone",
+            description: "Ride Payment",
+            order_id: order.id,
 
-        amount: order.amount,
-
-        currency: order.currency,
-
-        name: "Uber Clone",
-
-        description: "Ride Payment",
-
-        order_id: order.id,
-
-        handler: function (response) {
+            handler: function () {
 
             alert("Payment Successful");
 
-            localStorage.removeItem("currentRide");
+            navigate("/rating", {
+                state: {
+                    rideId: ride._id,
+                    captainId: ride.captain._id
+                }
+            });
+},
+            theme: {
+                color: "#000000"
+            }
+        };
 
-            navigate("/home");
-        },
+        const razorpay = new window.Razorpay(options);
 
-        theme: {
-            color: "#000000"
-        }
-
+        razorpay.open();
     };
-
-    const razorpay =
-    new window.Razorpay(options);
-
-    razorpay.open();
-};
 
     return (
         <div>
 
-            <img
-                className='-mt-9 h-full w-full object-cover'
-                src='https://i.sstatic.net/fKePl.gif'
-                alt='map-demo'
-            />
+            {ride && (
+                <div className="absolute inset-0 z-0">
+                    <LiveMap
+                        pickup={[
+                            ride?.pickupCoordinates?.lat,
+                            ride?.pickupCoordinates?.lng
+                        ]}
+                        destination={[
+                            ride?.destinationCoordinates?.lat,
+                            ride?.destinationCoordinates?.lng
+                        ]}
+                    />
+                </div>
+            )}
 
             <div className='absolute top-3 right-3'>
                 <Link to='/home'>

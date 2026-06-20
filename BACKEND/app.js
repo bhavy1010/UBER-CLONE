@@ -12,6 +12,7 @@ const captainRoutes = require("./routes/captain.router");
 const mapRoutes = require("./routes/maps.routes");
 const rideRoutes = require("./routes/ride.routes"); // NEW
 const paymentRoutes = require("./routes/payment.routes");
+const ratingRoutes = require("./routes/rating.routes");
 
 
 
@@ -35,5 +36,6 @@ app.use("/captains", captainRoutes);
 app.use("/maps", mapRoutes);
 app.use("/rides", rideRoutes); // NEW
 app.use("/payments", paymentRoutes);
+app.use("/ratings", ratingRoutes);
 
 module.exports = app;

@@ -7,22 +7,59 @@ module.exports.createUser = async ({
     password
 }) => {
 
-    if (!firstname || !email || !password) {
-        throw new Error("all fields are required");
+    if (
+        !firstname ||
+        !email ||
+        !password
+    ) {
+        throw new Error(
+            "All fields are required"
+        );
     }
 
-    const user = await userModel.create({
-        fullname: {
-            firstname,
-            lastname
-        },
-        email,
-        password
-    });
+    email = email
+        .trim()
+        .toLowerCase();
+
+    const existingUser =
+        await userModel.findOne({
+            email
+        });
+
+    if (existingUser) {
+        throw new Error(
+            "User already exists with this email"
+        );
+    }
+
+    const user =
+        await userModel.create({
+
+            fullname: {
+                firstname:
+                    firstname.trim(),
+                lastname:
+                    lastname?.trim() || ""
+            },
+
+            email,
+
+            password
+
+        });
 
     return user;
 };
 
-module.exports.findUserByEmail = async (email) => {
-    return await userModel.findOne({ email }).select("+password");
+module.exports.findUserByEmail =
+async (email) => {
+
+    return await userModel
+        .findOne({
+            email:
+                email
+                    .trim()
+                    .toLowerCase()
+        })
+        .select("+password");
 };

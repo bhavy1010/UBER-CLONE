@@ -63,14 +63,14 @@ const CaptainDetails = () => {
                     </div>
 
                     <div className='text-center'>
-                        <i className="text-2xl font-thin ri-booklet-line"></i>
+                        <i className="text-2xl font-thin ri-star-fill"></i>
 
                         <h5 className='text-lg font-medium'>
-                            4.9
+                            {captain?.averageRating?.toFixed(1) || "0.0"}
                         </h5>
 
                         <p className='text-sm text-gray-800'>
-                            Ratings
+                            Rating
                         </p>
                     </div>
 

@@ -20,31 +20,71 @@ module.exports.createCaptain = async ({
         !capacity ||
         !vehicleType
     ) {
-        throw new Error("All fields are required");
+        throw new Error(
+            "All fields are required"
+        );
     }
 
-    const captain = await captainModel.create({
-        fullname: {
-            firstname,
-            lastname
-        },
-        email,
-        password,
-        vehicle: {
-            color,
-            plate,
-            capacity,
-            vehicleType
-        }
-    });
+    email = email
+        .trim()
+        .toLowerCase();
+
+    const existingCaptain =
+        await captainModel.findOne({
+            email
+        });
+
+    if (existingCaptain) {
+        throw new Error(
+            "Captain already exists with this email"
+        );
+    }
+
+    const captain =
+        await captainModel.create({
+
+            fullname: {
+                firstname:
+                    firstname.trim(),
+                lastname:
+                    lastname?.trim() || ""
+            },
+
+            email,
+
+            password,
+
+            vehicle: {
+                color:
+                    color.trim(),
+
+                plate:
+                    plate.trim().toUpperCase(),
+
+                capacity,
+
+                vehicleType
+            },
+
+            totalEarnings: 0,
+            totalTrips: 0,
+            hoursOnline: 0
+
+        });
 
     return captain;
 };
 
-module.exports.findCaptainByEmail = async (email) => {
+module.exports.findCaptainByEmail =
+async (email) => {
 
     return await captainModel
-        .findOne({ email })
+        .findOne({
+            email:
+                email
+                    .trim()
+                    .toLowerCase()
+        })
         .select("+password");
 
 };

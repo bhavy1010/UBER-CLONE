@@ -85,6 +85,17 @@ module.exports.createRide = async ({
         throw new Error("Invalid vehicle type");
     }
 
+    // NEW
+    const pickupCoordinates =
+        await mapService.getAddressCoordinate(
+            pickup
+        );
+
+    const destinationCoordinates =
+        await mapService.getAddressCoordinate(
+            destination
+        );
+
     const otp = module.exports.generateOtp(6);
 
     const ride = await rideModel.create({
@@ -94,6 +105,17 @@ module.exports.createRide = async ({
 
         pickup,
         destination,
+
+        // NEW
+        pickupCoordinates: {
+            lat: pickupCoordinates.lat,
+            lng: pickupCoordinates.lng
+        },
+
+        destinationCoordinates: {
+            lat: destinationCoordinates.lat,
+            lng: destinationCoordinates.lng
+        },
 
         fare,
 

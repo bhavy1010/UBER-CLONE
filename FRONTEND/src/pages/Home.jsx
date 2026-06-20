@@ -487,6 +487,7 @@ return () => {
         createRide={createRide}
           setConfirmRidePanel={setConfirmRidePanel}
           setVehicaleFound={setVehicaleFound}
+          setWaitingForDriver={setWaitingForDriver}
           pickup={pickup}
           destination={destination}
           fare={fare}

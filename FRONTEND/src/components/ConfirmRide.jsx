@@ -4,6 +4,7 @@ const ConfirmRide = ({
   createRide,
   setConfirmRidePanel,
   setVehicaleFound,
+  setWaitingForDriver,
   pickup,
   destination,
   fare,
@@ -92,9 +93,10 @@ const ConfirmRide = ({
           onClick={() => {
             setVehicaleFound(true);
             setConfirmRidePanel(false);
+            setWaitingForDriver(false);
             createRide();
           }}
-          className='bg-[#d4cd00d0] flex items-center justify-center rounded-lg mt-6 px-4 py-2 w-full text-lg text-[#130000]'
+          className='bg-[#d4cd00d0] flex items-center justify-center rounded-lg mt-6 px-4 py-2 w-full text-lg  text-[#130000]'
         >
           Confirm
         </button>

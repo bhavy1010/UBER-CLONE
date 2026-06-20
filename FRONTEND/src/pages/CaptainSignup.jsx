@@ -57,10 +57,11 @@ const CaptainSignup = () => {
             }
 
         } catch (error) {
-
-            console.log(error);
-
-        }
+                console.log(
+                    error.response?.data ||
+                    error.message
+                );
+            }
 
         setFirstname('');
         setLastname('');
@@ -173,7 +174,7 @@ const CaptainSignup = () => {
                     >
                         <option value="">Select Vehicle Type</option>
                         <option value="car">Car</option>
-                        <option value="motorcycle">Motorcycle</option>
+                        <option value="bike">Bike</option>
                         <option value="auto">Auto</option>
                     </select>
 

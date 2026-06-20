@@ -2,16 +2,28 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
+const allowedDomains = [
+    "gmail.com",
+    "yahoo.com",
+    "outlook.com",
+    "hotmail.com",
+    "icloud.com",
+    "proton.me",
+    "protonmail.com"
+];
+
 const captainSchema = new mongoose.Schema({
+
     fullname: {
         firstname: {
             type: String,
             required: true,
-            minlength: [3, "firstname should be at least 3 characters"]
+            minlength: [3, "First name must be at least 3 characters"]
         },
+
         lastname: {
             type: String,
-            minlength: [3, "lastname should be at least 3 characters"]
+            minlength: [3, "Last name must be at least 3 characters"]
         }
     },
 
@@ -20,13 +32,30 @@ const captainSchema = new mongoose.Schema({
         required: true,
         unique: true,
         lowercase: true,
-        match: [/\S+@\S+\.\S+/, "is invalid"]
+        trim: true,
+
+        validate: {
+            validator: function (email) {
+
+                const domain =
+                    email.split("@")[1];
+
+                return allowedDomains.includes(
+                    domain
+                );
+            },
+
+            message:
+                "Please use a valid email provider"
+        }
     },
 
     password: {
         type: String,
         required: true,
-        select: false
+        select: false,
+
+        
     },
 
     socketId: {
@@ -40,22 +69,24 @@ const captainSchema = new mongoose.Schema({
     },
 
     vehicle: {
+
         color: {
             type: String,
             required: true,
-            minlength: [3, "color should be at least 3 characters"]
+            minlength: [3, "Color should be at least 3 characters"]
         },
 
         plate: {
             type: String,
             required: true,
-            minlength: [3, "plate should be at least 3 characters"]
+            uppercase: true,
+            minlength: [3, "Plate should be at least 3 characters"]
         },
 
         capacity: {
             type: Number,
             required: true,
-            min: [1, "capacity should be at least 1"]
+            min: [1, "Capacity should be at least 1"]
         },
 
         vehicleType: {
@@ -66,46 +97,78 @@ const captainSchema = new mongoose.Schema({
     },
 
     location: {
-        lat: {
-            type: Number
-        },
 
-        lng: {
-            type: Number
-        }
+        lat: Number,
+
+        lng: Number
     },
-            totalEarnings: {
-            type: Number,
-            default: 0
-        },
 
-        totalTrips: {
-            type: Number,
-            default: 0
-        },
+    totalEarnings: {
+        type: Number,
+        default: 0
+    },
 
-        hoursOnline: {
-            type: Number,
-            default: 0
-        }
+    totalTrips: {
+        type: Number,
+        default: 0
+    },
+
+    hoursOnline: {
+        type: Number,
+        default: 0
+    },
+
+    averageRating: {
+        type: Number,
+        default: 0
+    },
+
+    ratingCount: {
+        type: Number,
+        default: 0
+    }
+
+},
+{
+    timestamps: true
 });
 
-captainSchema.methods.generateAuthToken = function () {
+captainSchema.methods.generateAuthToken =
+function () {
+
     return jwt.sign(
-        { _id: this._id },
+        {
+            _id: this._id
+        },
         process.env.JWT_SECRET,
-        { expiresIn: "24h" }
+        {
+            expiresIn: "24h"
+        }
     );
 };
 
-captainSchema.methods.comparePassword = async function (password) {
-    return await bcrypt.compare(password, this.password);
+captainSchema.methods.comparePassword =
+async function (password) {
+
+    return await bcrypt.compare(
+        password,
+        this.password
+    );
 };
 
-captainSchema.statics.hashPassword = async function (password) {
-    return await bcrypt.hash(password, 10);
+captainSchema.statics.hashPassword =
+async function (password) {
+
+    return await bcrypt.hash(
+        password,
+        10
+    );
 };
 
-const captainModel = mongoose.model("Captain", captainSchema);
+const captainModel =
+mongoose.model(
+    "Captain",
+    captainSchema
+);
 
 module.exports = captainModel;

@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import FinishRide from '../components/FinishRide';
+import LiveMap from '../components/LiveMap';
 
 const CaptainRiding = () => {
 
@@ -59,16 +60,25 @@ const CaptainRiding = () => {
   return (
     <div>
 
-      <img
-        className='-mt-9 h-full w-full object-cover'
-        src='https://i.sstatic.net/fKePl.gif'
-        alt='map-demo'
-      />
+      <div className="absolute inset-0 z-0">
+        {ride && (
+          <LiveMap
+            pickup={[
+                ride?.pickupCoordinates?.lat,
+                ride?.pickupCoordinates?.lng
+            ]}
+            destination={[
+                ride?.destinationCoordinates?.lat,
+                ride?.destinationCoordinates?.lng
+              ]}
+          />
+         )}
+      </div>
 
-      <div className='absolute top-1 w-full flex items-center justify-between rounded-xl p-5'>
+      <div className='absolute top-1 w-full flex items-center justify-between rounded-xl p-5 pl-14'>
 
         <img
-          className='h-7'
+          className='h-7 left-10'
           src='https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png'
           alt='uber'
         />
