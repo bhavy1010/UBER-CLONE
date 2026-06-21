@@ -200,35 +200,27 @@ return () => {
     setVehicalePanel(true);
   };
 
-  useGSAP(() => {
+ useGSAP(() => {
 
     if (panelOpen) {
 
-      gsap.to(panelRef.current, {
-        height: '70%',
-        padding: 20,
-        opacity: 1
-      });
-
-      gsap.to(panelCloseRef.current, {
-        opacity: 1
-      });
+        gsap.to(panelRef.current, {
+            y: 0,
+            duration: 0.35,
+            ease: "power3.out"
+        });
 
     } else {
 
-      gsap.to(panelRef.current, {
-        height: '0%',
-        padding: 0,
-        opacity: 0
-      });
-
-      gsap.to(panelCloseRef.current, {
-        opacity: 0
-      });
+        gsap.to(panelRef.current, {
+            y: "100%",
+            duration: 0.3,
+            ease: "power3.in"
+        });
 
     }
 
-  }, [panelOpen]);
+}, [panelOpen]);
 
   useGSAP(() => {
 
@@ -370,92 +362,154 @@ return () => {
 
 
   return (
-    <div className='h-screen relative overflow-hidden'>
+  <div className="relative h-screen overflow-hidden bg-slate-100">
+
+    {/* MAP */}
+
+    <div className="absolute inset-0">
 
       <img
-        className={`w-16 absolute left-5 top-5 z-20 transition-all duration-300 ${
-          panelOpen ? 'opacity-0' : 'opacity-100'
-        }`}
-        src='https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png'
-        alt='Uber Logo'
-      />    
+        className="h-full w-full object-cover"
+        src="https://i.sstatic.net/fKePl.gif"
+        alt="map"
+      />
 
-       <div className='h-screen w-screen'>
-        <img
-          className=' -mt-9 h-full w-full object-cover'
-          src='https://i.sstatic.net/fKePl.gif'
-          alt='map-demo'
-        />
+      <div className="absolute inset-0 bg-black/10"></div>
+
+    </div>
+
+    {/* LOGO */}
+
+    {!panelOpen && (
+
+      <div className="absolute top-4 left-4 right-4 z-20">
+
+        <div className="bg-white/95 backdrop-blur-md rounded-3xl shadow-lg px-4 py-3">
+
+          <img
+            className="h-8"
+            src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png"
+            alt="Uber"
+          />
+
+          <p className="text-xs text-slate-500 mt-1">
+            Find your next ride
+          </p>
+
+        </div>
+
       </div>
 
-      <div className='flex flex-col justify-end absolute top-0 h-screen w-full'>
+    )}
 
-        <div className='h-[30%] p-5 bg-white relative'>
+    {/* MAIN PANEL */}
 
-          <h5
-            ref={panelCloseRef}
+    <div
+      className={`absolute left-0 right-0 bottom-0 z-30 bg-white shadow-2xl transition-all duration-300 overflow-hidden ${
+        panelOpen
+          ? "top-0 rounded-none"
+          : "rounded-t-[35px]"
+      }`}
+    >
+
+      <div className="px-5 pt-6">
+
+        {panelOpen && (
+
+          <button
             onClick={() => setPanelOpen(false)}
-            className='absolute top-5 right-8 text-3xl opacity-0 cursor-pointer'
+            className="absolute top-5 right-5 h-10 w-10 rounded-full bg-slate-100 flex items-center justify-center"
           >
-            <i className="ri-arrow-down-wide-fill"></i>
-          </h5>
+            <i className="ri-close-line text-xl"></i>
+          </button>
 
-          <h4 className='text-2xl font-semibold'>
-            Find a trip
-          </h4>
+        )}
 
-          <form onSubmit={submitHandler}>
+        <h2 className="text-3xl font-bold text-slate-800">
+          Where to?
+        </h2>
 
-            <div className="absolute h-14 w-1 rounded-full top-[45%] left-10 bg-gray-900"></div>
-            <div className="absolute h-3 w-3 rounded-full top-[45%] left-9 bg-green-700"></div>
-            <div className="absolute h-3 w-3 rounded-full top-[70%] left-9 bg-red-600"></div>
+        <p className="text-sm text-slate-500 mb-5">
+          Book a ride in seconds
+        </p>
+
+        <form onSubmit={submitHandler}>
+
+          {/* PICKUP */}
+
+          <div className="relative mb-3">
 
             <input
               value={pickup}
               onClick={() => {
-                setActiveField('pickup');
+                setActiveField("pickup");
                 setPanelOpen(true);
               }}
               onChange={(e) => {
-                setActiveField('pickup');
                 setPickup(e.target.value);
+                setActiveField("pickup");
+                setPanelOpen(true);
               }}
-              className='bg-[#eee] px-12 py-2 text-base rounded-lg w-full mt-5'
-              type='text'
-              placeholder='Add a pick-up location'
+              className="w-full h-14 pl-14 pr-4 rounded-2xl bg-slate-100 border border-slate-200"
+              placeholder="Enter pickup location"
             />
+
+            <div className="absolute left-4 top-1/2 -translate-y-1/2">
+
+              <i className="ri-map-pin-user-fill text-green-600 text-lg"></i>
+
+            </div>
+
+          </div>
+
+          {/* DESTINATION */}
+
+          <div className="relative">
 
             <input
               value={destination}
               onClick={() => {
-                setActiveField('destination');
+                setActiveField("destination");
                 setPanelOpen(true);
               }}
               onChange={(e) => {
-                setActiveField('destination');
                 setDestination(e.target.value);
+                setActiveField("destination");
+                setPanelOpen(true);
               }}
-              className='bg-[#eee] px-12 py-2 text-base rounded-lg w-full mt-3'
-              type='text'
-              placeholder='Enter your destination'
+              className="w-full h-14 pl-14 pr-4 rounded-2xl bg-slate-100 border border-slate-200"
+              placeholder="Where are you going?"
             />
 
-          </form>
+            <div className="absolute left-4 top-1/2 -translate-y-1/2">
 
-              <button 
-              onClick={()=>{
-               findTrip();
-              }}
-              className=' mt-9  bg-[#2cb61fd0] flex items-center justify-center rounded-lg mb-6 px-4 py-2 w-full text-lg text-[#ffffff]'>
-                Find Trip
-              </button>
+              <i className="ri-map-2-fill text-red-500 text-lg"></i>
 
-        </div>
+            </div>
 
-        <div
-          ref={panelRef}
-          className='h-0 bg-white overflow-hidden'
-        >
+          </div>
+
+        </form>
+
+        {panelOpen && (
+
+          <button
+            onClick={findTrip}
+            className="w-full mt-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold py-4 rounded-2xl shadow-lg"
+          >
+            Find Ride
+          </button>
+
+        )}
+
+      </div>
+
+      {/* LOCATION SUGGESTIONS */}
+
+      {panelOpen && (
+
+        <div className="h-[calc(100vh-220px)] overflow-y-auto mt-5">
+
           <LocationSearchPanel
             suggestions={suggestions}
             loading={loadingSuggestions}
@@ -465,54 +519,82 @@ return () => {
             setVehicalePanel={setVehicalePanel}
             setPanelOpen={setPanelOpen}
           />
+
         </div>
 
-      </div>
-
-      <div
-        ref={vehicalePanelRef} className='fixed w-full z-30 bottom-0 translate-y-full bg-white px-3 py-10'>
-        <VehicalePanel
-          
-          setVehicalePanel={setVehicalePanel}
-          setConfirmRidePanel={setConfirmRidePanel}
-          fare={fare}
-          setVehicleType={setVehicleType}
-          setSelectedFare={setSelectedFare}
-        />
-      </div>
-
-      <div
-        ref={confirmRidePanelRef} className='fixed w-full z-30 bottom-0 translate-y-full bg-white px-3 py-10'>
-        <ConfirmRide
-        createRide={createRide}
-          setConfirmRidePanel={setConfirmRidePanel}
-          setVehicaleFound={setVehicaleFound}
-          setWaitingForDriver={setWaitingForDriver}
-          pickup={pickup}
-          destination={destination}
-          fare={fare}
-          vehicleType={vehicleType}
-      />
-      </div>
-
-      <div ref={vehicaleFoundRef}
-         className='fixed w-full z-30 bottom-0 translate-y-full bg-white px-3 py-10'>
-        < LookingForDriver  
-            setWaitingForDriver={setWaitingForDriver}
-            pickup={pickup}
-            destination={destination}
-            fare={fare}
-            vehicleType={vehicleType}/>
-      </div>
-
-      <div ref={waitingForDriverRef}
-         className='fixed w-full z-30 bottom-0 translate-y-full bg-white px-3 py-10'>
-        <WaitingForDriver ride={currentRide} otp={rideOtp} />
-      </div>
-
+      )}
 
     </div>
-  );
+
+    {/* VEHICLE PANEL */}
+
+    <div
+      ref={vehicalePanelRef}
+      className="fixed bottom-0 left-0 right-0 z-50 bg-slate-50 px-4 py-6 rounded-t-[35px] translate-y-full"
+    >
+
+      <VehicalePanel
+        setVehicalePanel={setVehicalePanel}
+        setConfirmRidePanel={setConfirmRidePanel}
+        fare={fare}
+        setVehicleType={setVehicleType}
+        setSelectedFare={setSelectedFare}
+      />
+
+    </div>
+
+    {/* CONFIRM RIDE */}
+
+    <div
+      ref={confirmRidePanelRef}
+      className="fixed bottom-0 left-0 right-0 z-50 bg-slate-50 px-4 py-6 rounded-t-[35px] translate-y-full"
+    >
+
+      <ConfirmRide
+        createRide={createRide}
+        setConfirmRidePanel={setConfirmRidePanel}
+        setVehicaleFound={setVehicaleFound}
+        setWaitingForDriver={setWaitingForDriver}
+        pickup={pickup}
+        destination={destination}
+        fare={fare}
+        vehicleType={vehicleType}
+      />
+
+    </div>
+
+    {/* LOOKING FOR DRIVER */}
+
+    <div
+      ref={vehicaleFoundRef}
+      className="fixed bottom-0 left-0 right-0 z-50 bg-slate-50 px-4 py-6 rounded-t-[35px] translate-y-full"
+    >
+
+      <LookingForDriver
+        pickup={pickup}
+        destination={destination}
+        fare={fare}
+        vehicleType={vehicleType}
+      />
+
+    </div>
+
+    {/* WAITING FOR DRIVER */}
+
+    <div
+      ref={waitingForDriverRef}
+      className="fixed bottom-0 left-0 right-0 z-50 bg-slate-50 px-4 py-6 rounded-t-[35px] translate-y-full"
+    >
+
+      <WaitingForDriver
+        ride={currentRide}
+        otp={rideOtp}
+      />
+
+    </div>
+
+  </div>
+);
 };
 
 export default Home;

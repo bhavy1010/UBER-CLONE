@@ -1,14 +1,23 @@
-import { MapContainer, TileLayer, Marker, Popup, Polyline } from "react-leaflet";
+import {
+    MapContainer,
+    TileLayer,
+    Marker,
+    Popup,
+    Polyline
+} from "react-leaflet";
+
 import L from "leaflet";
 
 const pickupIcon = new L.Icon({
-    iconUrl: "https://d1a3f4spazzrp4.cloudfront.net/car-types/haloProductImages/v1.1/Black_v1.png",
-    iconSize: [95, 95]
+    iconUrl:
+        "https://cdn-icons-png.flaticon.com/512/684/684908.png",
+    iconSize: [40, 40]
 });
 
 const destinationIcon = new L.Icon({
-    iconUrl: "https://cdn-icons-png.flaticon.com/512/2776/2776067.png",
-    iconSize: [35, 35]
+    iconUrl:
+        "https://cdn-icons-png.flaticon.com/512/2776/2776067.png",
+    iconSize: [40, 40]
 });
 
 const LiveMap = ({
@@ -26,41 +35,57 @@ const LiveMap = ({
     }
 
     return (
-        <MapContainer
-            center={pickup}
-            zoom={12}
-            className="h-full w-full z-0"
-        >
-            <TileLayer
-                attribution='&copy; OpenStreetMap contributors'
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
+        <div className="h-full w-full">
 
-            <Marker
-                position={pickup}
-                icon={pickupIcon}
+            <MapContainer
+                center={pickup}
+                zoom={13}
+                className="h-full w-full"
+                zoomControl={false}
             >
-                <Popup>
-                    Pickup Location
-                </Popup>
-            </Marker>
 
-            <Marker
-                position={destination}
-                icon={destinationIcon}
-            >
-                <Popup>
-                    Destination
-                </Popup>
-            </Marker>
+                <TileLayer
+                    attribution='&copy; OpenStreetMap contributors'
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
 
-            <Polyline
-                positions={[
-                    pickup,
-                    destination
-                ]}
-            />
-        </MapContainer>
+                <Marker
+                    position={pickup}
+                    icon={pickupIcon}
+                >
+                    <Popup>
+                        Pickup Location
+                    </Popup>
+                </Marker>
+
+                <Marker
+                    position={destination}
+                    icon={destinationIcon}
+                >
+                    <Popup>
+                        Destination
+                    </Popup>
+                </Marker>
+
+                <Polyline
+                    positions={[
+                        pickup,
+                        destination
+                    ]}
+                    pathOptions={{
+                        color: "#2563eb",
+                        weight: 6,
+                        opacity: 0.8
+                    }}
+                />
+
+            </MapContainer>
+
+            {/* Gradient Overlay */}
+
+            <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-black/10 via-transparent to-black/20 z-[400]"></div>
+
+        </div>
     );
 };
 

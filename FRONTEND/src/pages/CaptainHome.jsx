@@ -17,8 +17,7 @@ const CaptainHome = () => {
 
   const ridePopupPanelRef = useRef(null);
   const ConfirmRidePopupPanelRef = useRef(null);
-
-  const { socket, sendMessage } = useSocket();
+  const { socket } = useSocket(); 
   const { captain } = useContext(CaptainDataContext);
 
   console.log("CAPTAIN HOME DATA:", captain);
@@ -154,48 +153,138 @@ const CaptainHome = () => {
 
 
 
-  return (
-    <div>
-        
-        {/* <div className='h-screen w-screen'> */}
-        <img
-          className=' -mt-9 h-full w-full object-cover'
-          src='https://i.sstatic.net/fKePl.gif'
-          alt='map-demo'
-        />
-        <div className='absolute top-1  w-full flex items-center justify-between rounded-xl p-5'>
-          <img className='h-7 ' src='https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png'></img>
-            <Link
-            to='/home'
-            ><i className=" text-black font-black text-3xl ri-logout-box-line"></i></Link>
-        </div>
-      {/* </div> */}
+ return (
+    <div className="relative h-screen max-w-md mx-auto overflow-hidden bg-slate-100">
 
-        <div>
-          <CaptainDetails/>
-        </div>
-        <div  ref={ridePopupPanelRef}
-           className='fixed w-full z-30 bottom-0 translate-y-full bg-white px-3 py-10'>
-          <RidePopUp
-              rideRequest={rideRequest}
-              setRidePopupPanel={setRidePopupPanel}
-              setConfirmRidePopupPanel={setConfirmRidePopupPanel}
-              setAcceptedRide={setAcceptedRide}
-          />
+        {/* MAP */}
+
+        <div className="absolute inset-0">
+
+            <img
+                className="h-full w-full object-cover"
+                src="https://i.sstatic.net/fKePl.gif"
+                alt="map"
+            />
+
+            <div className="absolute inset-0 bg-black/10"></div>
+
         </div>
 
-        <div  ref={ConfirmRidePopupPanelRef}
-           className='fixed w-full z-30 bottom-0 translate-y-full h-screen bg-white px-3 py-10'>
-          <ConfirmRidePopupPanel
-              rideRequest={acceptedRide || rideRequest}
-              setConfirmRidePopupPanel={setConfirmRidePopupPanel}
-          />
+        {/* HEADER */}
+
+        <div className="absolute top-0 left-0 right-0 z-10 mb-5 p-4">
+
+            <div className="bg-white/95 backdrop-blur-md rounded-3xl shadow-lg px-5 py-4 flex items-center justify-between mb-10">
+
+                <div>
+
+                    <img
+                        className="h-7"
+                        src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png"
+                        alt="uber"
+                    />
+
+                    <p className="text-xs text-slate-500 mt-1">
+                        Captain Dashboard
+                    </p>
+
+                </div>
+
+                <Link
+                    to="/captain/logout"
+                    className="h-12 w-12 rounded-2xl bg-red-50 flex items-center justify-center"
+                >
+                    <i className="ri-logout-box-r-line text-red-500 text-xl"></i>
+                </Link>
+
+            </div>
+
         </div>
 
-      
+        {/* STATUS CARD */}
+
+        <div className="absolute top-28 left-4 right-4 z-20">
+
+            <div className="bg-white rounded-2xl shadow-lg p-4 flex items-center justify-between">
+
+                <div className="flex items-center gap-3">
+
+                    <div className="h-3 w-3 bg-green-500 rounded-full animate-pulse"></div>
+
+                    <div>
+
+                        <h3 className="font-semibold text-slate-800">
+                            Online
+                        </h3>
+
+                        <p className="text-xs text-slate-500">
+                            Ready for rides
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <div className="text-right">
+
+                    <p className="text-xs text-slate-500">
+                        Rating
+                    </p>
+
+                    <h3 className="font-bold text-slate-800">
+                        {captain?.averageRating?.toFixed(1) || "0.0"} ⭐
+                    </h3>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {/* CAPTAIN DETAILS */}
+
+        <div
+            className={`absolute bottom-0 left-0 right-0 z-20 transition-all duration-300 ${
+                ridePopupPanel || confirmRidePopupPanel
+                    ? "opacity-0 pointer-events-none"
+                    : "opacity-100"
+            }`}
+        >
+            <CaptainDetails />
+        </div>
+
+        {/* NEW RIDE POPUP */}
+
+        <div
+            ref={ridePopupPanelRef}
+            className="fixed bottom-0 left-0 w-full z-40 translate-y-full bg-slate-50 rounded-t-[32px] px-4 py-5 max-h-[85vh] overflow-y-auto shadow-2xl"
+        >
+
+            <RidePopUp
+                rideRequest={rideRequest}
+                setRidePopupPanel={setRidePopupPanel}
+                setConfirmRidePopupPanel={setConfirmRidePopupPanel}
+                setAcceptedRide={setAcceptedRide}
+            />
+
+        </div>
+
+        {/* CONFIRM RIDE POPUP */}
+
+        <div
+            ref={ConfirmRidePopupPanelRef}
+            className="fixed bottom-0 left-0 w-full z-50 translate-y-full bg-slate-50 rounded-t-[32px] px-4 py-5 max-h-[90vh] overflow-y-auto shadow-2xl"
+        >
+
+            <ConfirmRidePopupPanel
+                rideRequest={acceptedRide || rideRequest}
+                setConfirmRidePopupPanel={setConfirmRidePopupPanel}
+            />
+
+        </div>
 
     </div>
-  )
+);
 }
 
 export default CaptainHome

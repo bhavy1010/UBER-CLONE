@@ -13,6 +13,7 @@ const CaptainSignup = () => {
     const [lastname, setLastname] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
 
     const [vehicleColor, setVehicleColor] = useState('');
     const [vehiclePlate, setVehiclePlate] = useState('');
@@ -57,11 +58,30 @@ const CaptainSignup = () => {
             }
 
         } catch (error) {
-                console.log(
-                    error.response?.data ||
-                    error.message
+
+            if (error.response?.data?.error) {
+
+                setErrorMessage(
+                    error.response.data.error
                 );
+
+            } else if (
+                error.response?.data?.errors
+            ) {
+
+                setErrorMessage(
+                    error.response.data.errors[0].msg
+                );
+
+            } else {
+
+                setErrorMessage(
+                    "Something went wrong"
+                );
+
             }
+
+        }
 
         setFirstname('');
         setLastname('');
@@ -74,133 +94,210 @@ const CaptainSignup = () => {
     };
 
     return (
-        <div className='p-7 h-screen flex flex-col justify-between'>
+        <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-black px-6 py-8">
 
-            <div>
+            <div className="max-w-md mx-auto">
 
-                <form onSubmit={submitHandler}>
+                <img
+                    className="w-20 mb-6"
+                    src="https://freelogopng.com/images/all_img/1659761425uber-driver-logo-png.png"
+                    alt="Driver"
+                />
 
-                    <img
-                        className='w-16 mb-10'
-                        src='https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png'
-                        alt='Uber Logo'
-                    />
+                <h1 className="text-4xl font-bold text-white">
+                    Become a Driver
+                </h1>
 
-                    <h3 className='text-lg font-medium mb-2'>
-                        What's your name
+                <p className="text-gray-400 mt-2 mb-8">
+                    Create your captain account and start earning.
+                </p>
+
+                <form
+                    onSubmit={submitHandler}
+                    className="bg-white rounded-3xl p-5 shadow-2xl"
+                >
+
+                    <h3 className="text-lg font-bold mb-4">
+                        Personal Information
                     </h3>
 
-                    <div className='flex gap-4 mb-5'>
+                    <div className="flex gap-3 mb-4">
+
                         <input
                             value={firstname}
-                            onChange={(e) => setFirstname(e.target.value)}
-                            className='bg-[#eeeeee] rounded px-4 py-2 border w-1/2 text-lg'
+                            onChange={(e) =>
+                                setFirstname(e.target.value)
+                            }
+                            className="w-1/2 bg-gray-100 border border-gray-200 rounded-2xl px-4 py-4 outline-none focus:border-black"
                             required
-                            type='text'
-                            placeholder='First Name'
+                            type="text"
+                            placeholder="First Name"
                         />
 
                         <input
                             value={lastname}
-                            onChange={(e) => setLastname(e.target.value)}
-                            className='bg-[#eeeeee] rounded px-4 py-2 border w-1/2 text-lg'
-                            type='text'
-                            placeholder='Last Name'
+                            onChange={(e) =>
+                                setLastname(e.target.value)
+                            }
+                            className="w-1/2 bg-gray-100 border border-gray-200 rounded-2xl px-4 py-4 outline-none focus:border-black"
+                            type="text"
+                            placeholder="Last Name"
                         />
-                    </div>
 
-                    <h3 className='text-lg font-medium mb-2'>
-                        What's your email
-                    </h3>
+                    </div>
 
                     <input
                         value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className='bg-[#eeeeee] rounded px-4 py-2 mb-5 border w-full text-lg'
+                        onChange={(e) =>
+                            setEmail(e.target.value)
+                        }
+                        className="w-full bg-gray-100 border border-gray-200 rounded-2xl px-4 py-4 mb-4 outline-none focus:border-black"
                         required
-                        type='email'
-                        placeholder='email@example.com'
+                        type="email"
+                        placeholder="Email Address"
                     />
-
-                    <h3 className='text-lg font-medium mb-2'>
-                        Create Password
-                    </h3>
 
                     <input
                         value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        className='bg-[#eeeeee] rounded px-4 py-2 mb-5 border w-full text-lg'
+                        onChange={(e) =>
+                            setPassword(e.target.value)
+                        }
+                        className="w-full bg-gray-100 border border-gray-200 rounded-2xl px-4 py-4 outline-none focus:border-black"
                         required
-                        type='password'
-                        placeholder='password'
+                        type="password"
+                        placeholder="Create Password"
                     />
 
-                    <h3 className='text-lg font-medium mb-2'>
-                        Vehicle Details
+                    <div className="bg-yellow-50 border border-yellow-200 rounded-2xl p-3 mt-3 mb-5">
+
+                        <p className="font-semibold text-sm">
+                            Password Requirements
+                        </p>
+
+                        <ul className="text-xs text-gray-600 mt-2 space-y-1">
+                            <li>✓ Minimum 8 characters</li>
+                            <li>✓ One uppercase letter</li>
+                            <li>✓ One lowercase letter</li>
+                            <li>✓ One number</li>
+                            <li>✓ One special character</li>
+                        </ul>
+
+                    </div>
+
+                    <h3 className="text-lg font-bold mb-4">
+                        Vehicle Information
                     </h3>
 
-                    <input
-                        value={vehicleColor}
-                        onChange={(e) => setVehicleColor(e.target.value)}
-                        className='bg-[#eeeeee] rounded px-4 py-2 mb-3 border w-full text-lg'
-                        required
-                        type='text'
-                        placeholder='Vehicle Color'
-                    />
+                    <div className="space-y-3">
 
-                    <input
-                        value={vehiclePlate}
-                        onChange={(e) => setVehiclePlate(e.target.value)}
-                        className='bg-[#eeeeee] rounded px-4 py-2 mb-3 border w-full text-lg'
-                        required
-                        type='text'
-                        placeholder='Vehicle Plate Number'
-                    />
+                        <input
+                            value={vehicleColor}
+                            onChange={(e) =>
+                                setVehicleColor(e.target.value)
+                            }
+                            className="w-full bg-gray-100 border border-gray-200 rounded-2xl px-4 py-4 outline-none focus:border-black"
+                            required
+                            type="text"
+                            placeholder="Vehicle Color"
+                        />
 
-                    <input
-                        value={vehicleCapacity}
-                        onChange={(e) => setVehicleCapacity(e.target.value)}
-                        className='bg-[#eeeeee] rounded px-4 py-2 mb-3 border w-full text-lg'
-                        required
-                        type='number'
-                        placeholder='Vehicle Capacity'
-                    />
+                        <input
+                            value={vehiclePlate}
+                            onChange={(e) =>
+                                setVehiclePlate(e.target.value)
+                            }
+                            className="w-full bg-gray-100 border border-gray-200 rounded-2xl px-4 py-4 outline-none focus:border-black"
+                            required
+                            type="text"
+                            placeholder="Vehicle Plate Number"
+                        />
 
-                    <select
-                        value={vehicleType}
-                        onChange={(e) => setVehicleType(e.target.value)}
-                        className='bg-[#eeeeee] rounded px-4 py-2 mb-5 border w-full text-lg'
-                        required
-                    >
-                        <option value="">Select Vehicle Type</option>
-                        <option value="car">Car</option>
-                        <option value="bike">Bike</option>
-                        <option value="auto">Auto</option>
-                    </select>
+                        <input
+                            value={vehicleCapacity}
+                            onChange={(e) =>
+                                setVehicleCapacity(e.target.value)
+                            }
+                            className="w-full bg-gray-100 border border-gray-200 rounded-2xl px-4 py-4 outline-none focus:border-black"
+                            required
+                            type="number"
+                            placeholder="Passenger Capacity"
+                        />
+
+                        <select
+                            value={vehicleType}
+                            onChange={(e) =>
+                                setVehicleType(e.target.value)
+                            }
+                            className="w-full bg-gray-100 border border-gray-200 rounded-2xl px-4 py-4 outline-none focus:border-black"
+                            required
+                        >
+                            <option value="">
+                                Select Vehicle Type
+                            </option>
+
+                            <option value="car">
+                                🚗 Car
+                            </option>
+
+                            <option value="bike">
+                                🏍️ Bike
+                            </option>
+
+                            <option value="auto">
+                                🛺 Auto
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    {errorMessage && (
+
+                        <div className="mt-4 bg-red-50 border border-red-200 rounded-2xl p-3">
+
+                            <div className="flex items-center gap-2">
+
+                                <i className="ri-error-warning-fill text-red-500"></i>
+
+                                <p className="text-red-600 text-sm font-medium">
+                                    {errorMessage}
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    )}
 
                     <button
-                        type='submit'
-                        className='bg-[#111111] rounded mt-2 px-4 py-2 w-full text-lg text-white'
+                        type="submit"
+                        className="w-full bg-black text-white py-4 rounded-2xl text-lg font-semibold mt-5"
                     >
                         Create Captain Account
                     </button>
 
-                    <p className='text-center mt-2'>
-                        Already have an account?{' '}
-                        <Link to="/captain-login" className='text-blue-600'>
-                            Login here
+                    <p className="text-center text-sm text-gray-500 mt-5">
+
+                        Already have an account?
+
+                        <Link
+                            to="/captain-login"
+                            className="text-black font-semibold ml-1"
+                        >
+                            Login
                         </Link>
+
                     </p>
 
                 </form>
 
-            </div>
+                <p className="text-center text-xs text-gray-500 mt-6 px-4">
+                    By proceeding, you agree to receive calls,
+                    WhatsApp messages and SMS from Uber and its
+                    affiliates.
+                </p>
 
-            <p className='text-[11px] text-gray-600 mt-8 mb-4 pb-5 leading-4'>
-                By proceeding, you consent to receive calls, WhatsApp messages,
-                or SMS, including automated messages, from Uber and its affiliates
-                at the number provided.
-            </p>
+            </div>
 
         </div>
     );

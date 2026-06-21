@@ -7,64 +7,117 @@ const LookingForDriver = ({
     vehicleType,
 }) => {
 
+    const getVehicleImage = () => {
+
+        if (vehicleType === "car") {
+            return "https://cn-geo1.uber.com/image-proc/crop/resizecrop/udam/format=auto/width=956/height=538/srcb64=aHR0cHM6Ly90Yi1zdGF0aWMudWJlci5jb20vcHJvZC91ZGFtLWFzc2V0cy85MDM0YzIwMC1jZTI5LTQ5ZjEtYmYzNS1lOWQyNTBlODIxN2EucG5n";
+        }
+
+        if (vehicleType === "moto") {
+            return "https://cn-geo1.uber.com/image-proc/crop/resizecrop/udam/format=auto/width=552/height=552/srcb64=aHR0cHM6Ly90Yi1zdGF0aWMudWJlci5jb20vcHJvZC91ZGFtLWFzc2V0cy9lZjA5NThiZC1kNDMwLTQ1ZWYtYmU2Yi0zYmZiY2JmMDYyZjYucG5n";
+        }
+
+        return "https://cn-geo1.uber.com/image-proc/crop/resizecrop/udam/format=auto/width=552/height=552/srcb64=aHR0cHM6Ly90Yi1zdGF0aWMudWJlci5jb20vcHJvZC91ZGFtLWFzc2V0cy9mYzEwMWZmOC04MWExLTQ2YzMtOTk1YS02N2I0YmJkMmYyYmYuanBn";
+    };
+
     return (
-        <div>
+        <div className='pb-5'>
 
-            <h5
-                className='p-1 text-center absolute top-0 w-[95%] cursor-pointer'
-            >
-            </h5>
+            <div className='flex flex-col items-center'>
 
-            <h3 className='text-2xl font-semibold mb-3'>
-                Looking For Driver
-            </h3>
+                <div className='h-16 w-16 rounded-full border-4 border-blue-500 border-t-transparent animate-spin mb-4'>
+                </div>
 
-            <div className='flex gap-3 justify-between items-center flex-col'>
+                <h2 className='text-2xl font-bold text-slate-800'>
+                    Finding Driver
+                </h2>
+
+                <p className='text-sm text-slate-500 mt-1 text-center'>
+                    Please wait while we connect you with a nearby driver
+                </p>
+
+            </div>
+
+            <div className='bg-blue-50 rounded-3xl p-4 mt-5 flex justify-center'>
 
                 <img
-                    className='h-20'
-                    src='https://cn-geo1.uber.com/image-proc/crop/resizecrop/udam/format=auto/width=956/height=538/srcb64=aHR0cHM6Ly90Yi1zdGF0aWMudWJlci5jb20vcHJvZC91ZGFtLWFzc2V0cy85MDM0YzIwMC1jZTI5LTQ5ZjEtYmYzNS1lOWQyNTBlODIxN2EucG5n'
+                    className='h-24 object-contain'
+                    src={getVehicleImage()}
                     alt='vehicle'
                 />
 
-                <div className='w-full mt-3'>
+            </div>
 
-                    <div className='flex items-center gap-5 p-3 border-b-2'>
-                        <i className="text-lg ri-map-pin-user-fill"></i>
+            <div className='mt-5 space-y-4'>
+
+                <div className='bg-white rounded-3xl border border-slate-200 p-4 shadow-sm'>
+
+                    <div className='flex gap-4'>
+
+                        <div className='h-12 w-12 rounded-full bg-green-100 flex items-center justify-center'>
+                            <i className="ri-map-pin-user-fill text-xl text-green-600"></i>
+                        </div>
 
                         <div>
-                            <h3 className='text-lg font-medium'>
+
+                            <p className='text-xs text-slate-400 uppercase font-semibold'>
                                 Pickup
-                            </h3>
+                            </p>
 
-                            <p className='text-sm -mt-1 text-gray-600'>
+                            <h3 className='font-semibold text-slate-800 mt-1'>
                                 {pickup}
-                            </p>
+                            </h3>
+
                         </div>
+
                     </div>
 
-                    <div className='flex items-center gap-5 p-3 border-b-2'>
-                        <i className="text-lg ri-map-2-line"></i>
+                </div>
+
+                <div className='bg-white rounded-3xl border border-slate-200 p-4 shadow-sm'>
+
+                    <div className='flex gap-4'>
+
+                        <div className='h-12 w-12 rounded-full bg-red-100 flex items-center justify-center'>
+                            <i className="ri-map-2-line text-xl text-red-500"></i>
+                        </div>
 
                         <div>
-                            <h3 className='text-lg font-medium'>
+
+                            <p className='text-xs text-slate-400 uppercase font-semibold'>
                                 Destination
+                            </p>
+
+                            <h3 className='font-semibold text-slate-800 mt-1'>
+                                {destination}
                             </h3>
 
-                            <p className='text-sm -mt-1 text-gray-600'>
-                                {destination}
-                            </p>
                         </div>
+
                     </div>
 
-                    <div className='flex items-center gap-5 p-3'>
-                        <i className="text-lg ri-currency-line"></i>
+                </div>
+
+                <div className='bg-blue-600 text-white rounded-3xl p-5 shadow-lg'>
+
+                    <div className='flex items-center justify-between'>
 
                         <div>
-                            <h3 className='text-lg font-medium'>
+
+                            <p className='text-blue-100 text-sm'>
+                                Estimated Fare
+                            </p>
+
+                            <h2 className='text-3xl font-bold mt-1'>
                                 ₹{fare?.fare?.[vehicleType] || 0}
-                            </h3>
+                            </h2>
+
                         </div>
+
+                        <div className='h-14 w-14 rounded-full bg-white/20 flex items-center justify-center'>
+                            <i className="ri-wallet-3-line text-2xl"></i>
+                        </div>
+
                     </div>
 
                 </div>

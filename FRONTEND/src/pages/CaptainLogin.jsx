@@ -7,10 +7,13 @@ const App = () => {
 
     const navigate = useNavigate();
 
-    const { captain, setCaptain } = useContext(CaptainDataContext); 
+    const { captain, setCaptain } =
+        useContext(CaptainDataContext);
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [captainData, setCaptainData] = useState({});
+    const [errorMessage, setErrorMessage] = useState('');
 
     const submitHandler = async (e) => {
 
@@ -32,16 +35,45 @@ const App = () => {
 
                 const responseData = response.data;
 
-                localStorage.setItem('token', responseData.token);
+                localStorage.setItem(
+                    'token',
+                    responseData.token
+                );
 
-                setCaptain(responseData.captain);
+                setCaptain(
+                    responseData.captain
+                );
 
                 navigate('/captain-home');
             }
 
         } catch (error) {
 
-            console.log(error);
+            if (
+                error.response?.data?.error
+            ) {
+
+                setErrorMessage(
+                    error.response.data.error
+                );
+
+            }
+            else if (
+                error.response?.data?.errors
+            ) {
+
+                setErrorMessage(
+                    error.response.data.errors[0].msg
+                );
+
+            }
+            else {
+
+                setErrorMessage(
+                    "Something went wrong"
+                );
+
+            }
 
         }
 
@@ -52,72 +84,112 @@ const App = () => {
     };
 
     return (
-        <div className='p-7 h-screen flex flex-col justify-between'>
+        <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-black flex flex-col justify-between px-6 py-8">
 
             <div>
 
-                <form onSubmit={submitHandler}>
+                <div className="mb-8">
 
                     <img
-                        className='w-16 mb-3'
-                        src='https://freelogopng.com/images/all_img/1659761425uber-driver-logo-png.png'
-                        alt='Uber Driver Logo'
+                        className="w-20 mb-8"
+                        src="https://freelogopng.com/images/all_img/1659761425uber-driver-logo-png.png"
+                        alt="Driver Logo"
                     />
 
-                    <h3 className='text-lg font-medium mb-2'>
-                        What's your email
-                    </h3>
+                    <h1 className="text-4xl font-bold text-white">
+                        Driver Login
+                    </h1>
+
+                    <p className="text-gray-400 mt-2">
+                        Welcome back Captain
+                    </p>
+
+                </div>
+
+                <form
+                    onSubmit={submitHandler}
+                    className="bg-white rounded-3xl shadow-2xl p-5"
+                >
+
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        Email Address
+                    </label>
 
                     <input
                         value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className='bg-[#eeeeee] rounded px-4 py-2 mb-5 border w-full text-lg placeholder:text-base'
+                        onChange={(e) =>
+                            setEmail(e.target.value)
+                        }
+                        className="w-full bg-gray-100 border border-gray-200 rounded-2xl px-4 py-4 mb-5 outline-none focus:border-black"
                         required
-                        type='email'
-                        placeholder='email@example.com'
+                        type="email"
+                        placeholder="captain@gmail.com"
                     />
 
-                    <h3 className='text-lg font-medium mb-2'>
-                        Enter Password
-                    </h3>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        Password
+                    </label>
 
                     <input
                         value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        className='bg-[#eeeeee] rounded px-4 py-2 mb-5 border w-full text-lg placeholder:text-base'
+                        onChange={(e) =>
+                            setPassword(e.target.value)
+                        }
+                        className="w-full bg-gray-100 border border-gray-200 rounded-2xl px-4 py-4 mb-4 outline-none focus:border-black"
                         required
-                        type='password'
-                        placeholder='password'
+                        type="password"
+                        placeholder="Enter password"
                     />
 
+                    {errorMessage && (
+
+                        <div className="mb-4 bg-red-50 border border-red-200 rounded-2xl p-3">
+
+                            <div className="flex items-center gap-2">
+
+                                <i className="ri-error-warning-fill text-red-500"></i>
+
+                                <p className="text-red-600 text-sm font-medium">
+                                    {errorMessage}
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    )}
+
                     <button
-                        type='submit'
-                        className='bg-[#111111] rounded mt-2 px-4 py-2 w-full text-lg text-white'
+                        type="submit"
+                        className="w-full bg-black text-white py-4 rounded-2xl text-lg font-semibold shadow-lg"
                     >
-                        Login
+                        Login as Captain
                     </button>
 
-                    <p className='text-center mt-2'>
-                        Join a fleet?{" "}
+                    <p className="text-center text-sm text-gray-500 mt-5">
+
+                        New Driver?
+
                         <Link
                             to="/captain-signup"
-                            className='text-blue-600'
+                            className="font-semibold text-black ml-1"
                         >
-                            Register as Captain
+                            Register Now
                         </Link>
+
                     </p>
 
                 </form>
 
             </div>
 
-            <div>
+            <div className='mt-3 '>
 
                 <Link
                     to="/login"
-                    className='bg-[#3db41cd0] flex items-center justify-center rounded mt-6 mb-5 px-4 py-2 w-full text-lg text-[#130000]'
+                    className="bg-[#FFD60A] text-black font-semibold rounded-2xl py-4 flex items-center justify-center shadow-xl"
                 >
-                    Sign in as User 👦🏻
+                    Continue as User 👤
                 </Link>
 
             </div>

@@ -58,90 +58,177 @@ const CaptainRiding = () => {
   }, [finishRidePanel]);
 
   return (
-    <div>
+  <div className="relative h-screen overflow-hidden bg-slate-100">
 
-      <div className="absolute inset-0 z-0">
-        {ride && (
-          <LiveMap
-            pickup={[
-                ride?.pickupCoordinates?.lat,
-                ride?.pickupCoordinates?.lng
-            ]}
-            destination={[
-                ride?.destinationCoordinates?.lat,
-                ride?.destinationCoordinates?.lng
-              ]}
-          />
-         )}
-      </div>
+    {/* MAP */}
 
-      <div className='absolute top-1 w-full flex items-center justify-between rounded-xl p-5 pl-14'>
-
-        <img
-          className='h-7 left-10'
-          src='https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png'
-          alt='uber'
+    <div className="absolute inset-0 z-0">
+      {ride && (
+        <LiveMap
+          pickup={[
+            ride?.pickupCoordinates?.lat,
+            ride?.pickupCoordinates?.lng
+          ]}
+          destination={[
+            ride?.destinationCoordinates?.lat,
+            ride?.destinationCoordinates?.lng
+          ]}
         />
+      )}
+    </div>
 
-        <Link to='/captain-home'>
-          <i className="text-black font-black text-3xl ri-logout-box-line"></i>
+    {/* HEADER */}
+
+    <div className="absolute top-4 left-4 right-4 z-20">
+
+      <div className="bg-white/95 backdrop-blur-md rounded-3xl shadow-lg px-4 py-3 flex items-center justify-between">
+
+        <div>
+
+          <img
+            className="h-6"
+            src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png"
+            alt="uber"
+          />
+
+          <p className="text-xs text-slate-500 mt-1">
+            Ride In Progress
+          </p>
+
+        </div>
+
+        <Link
+          to="/captain-home"
+          className="h-10 w-10 rounded-2xl bg-slate-100 flex items-center justify-center"
+        >
+          <i className="ri-arrow-left-line text-lg text-slate-700"></i>
         </Link>
 
       </div>
 
-      <div
-        onClick={() => setFinishRidePanel(true)}
-        className='bg-[#d9d31a] w-screen p-5 bottom-0 absolute'
-      >
+    </div>
 
-        <h5 className='text-center'>
-          <i className="text-3xl font-bold text-gray-800 ri-arrow-up-wide-line"></i>
-        </h5>
+    {/* BOTTOM SHEET */}
 
-        <div className='flex justify-between items-center'>
+    <div
+      onClick={() => setFinishRidePanel(true)}
+      className="absolute bottom-0 left-0 right-0 z-20 max-h-[42vh]"
+    >
 
-          <div>
+      <div className="bg-white rounded-t-[30px] shadow-2xl px-4 pt-3 pb-4 overflow-y-auto max-h-[42vh]">
 
-            <h3 className='text-xl font-bold'>
-              {ride?.user?.fullname?.firstname || "Passenger"}
-            </h3>
+        <div className="flex justify-center mb-2">
 
-            <p className='text-sm text-gray-700'>
-              {ride?.pickup || "Pickup"}
-            </p>
-
-            <p className='text-sm text-gray-700'>
-              {ride?.destination || "Destination"}
-            </p>
-
-            <p className='font-semibold mt-2'>
-              ₹{ride?.fare || 0}
-            </p>
-
-          </div>
-
-          <button
-            className='bg-green-600 rounded-lg px-10 py-3 text-lg text-white'
-          >
-            Complete Ride
-          </button>
+          <div className="w-14 h-1.5 bg-slate-300 rounded-full"></div>
 
         </div>
 
-      </div>
+        {/* PASSENGER */}
 
-      <div
-        ref={finishRidePanelRef}
-        className='fixed w-full z-30 bottom-0 translate-y-full h-screen bg-white px-3 py-10'
-      >
-        <FinishRide
-          ride={ride}
-          setFinishRidePanel={setFinishRidePanel}
-        />
+        <div className="flex items-center justify-between mb-3">
+
+          <div>
+
+            <p className="text-[10px] uppercase text-slate-400 font-semibold">
+              Passenger
+            </p>
+
+            <h2 className="text-base font-bold text-slate-800">
+              {ride?.user?.fullname?.firstname || "Passenger"}
+            </h2>
+
+          </div>
+
+          <div className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-semibold">
+            On Trip
+          </div>
+
+        </div>
+
+        {/* PICKUP */}
+
+        <div className="bg-slate-50 rounded-2xl p-2.5 mb-2">
+
+          <p className="text-[10px] uppercase text-slate-400 font-semibold">
+            Pickup
+          </p>
+
+          <p className="text-sm text-slate-700 mt-1">
+            {ride?.pickup || "Pickup"}
+          </p>
+
+        </div>
+
+        {/* DESTINATION */}
+
+        <div className="bg-slate-50 rounded-2xl p-2.5 mb-2">
+
+          <p className="text-[10px] uppercase text-slate-400 font-semibold">
+            Destination
+          </p>
+
+          <p className="text-sm text-slate-700 mt-1">
+            {ride?.destination || "Destination"}
+          </p>
+
+        </div>
+
+        {/* FARE */}
+
+        <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-2xl p-3 text-white mb-3">
+
+          <div className="flex items-center justify-between">
+
+            <div>
+
+              <p className="text-blue-100 text-[11px]">
+                Trip Fare
+              </p>
+
+              <h2 className="text-xl font-bold mt-1">
+                ₹{ride?.fare || 0}
+              </h2>
+
+            </div>
+
+            <div className="h-10 w-10 rounded-full bg-white/20 flex items-center justify-center">
+
+              <i className="ri-wallet-3-line"></i>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        {/* COMPLETE BUTTON */}
+
+        <button
+          className="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white font-semibold py-2.5 rounded-2xl shadow-lg"
+        >
+          Complete Ride
+        </button>
+
       </div>
 
     </div>
-  );
+
+    {/* FINISH RIDE PANEL */}
+
+    <div
+      ref={finishRidePanelRef}
+      className="fixed bottom-0 left-0 right-0 z-40 h-screen translate-y-full bg-slate-50 px-4 py-6 rounded-t-[35px]"
+    >
+
+      <FinishRide
+        ride={ride}
+        setFinishRidePanel={setFinishRidePanel}
+      />
+
+    </div>
+
+  </div>
+);
 };
 
 export default CaptainRiding;
