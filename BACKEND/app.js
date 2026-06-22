@@ -22,11 +22,7 @@ connectToDb();
 
 app.use(
     cors({
-        origin: [
-            "http://localhost:5173",
-            "https://quickride-gamma.vercel.app",
-            "https://*.vercel.app"
-        ],
+        origin: true,
         credentials: true
     })
 );
