@@ -4,6 +4,8 @@ import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import FinishRide from '../components/FinishRide';
 import LiveMap from '../components/LiveMap';
+import quickRideLogo from "../assets/QuickRide-logo-white.jpeg";
+
 
 const CaptainRiding = () => {
 
@@ -86,10 +88,10 @@ const CaptainRiding = () => {
         <div>
 
           <img
-            className="h-6"
-            src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png"
-            alt="uber"
-          />
+                      className="h-6"
+                    src={quickRideLogo}
+                    alt="QuickRide"
+                />
 
           <p className="text-xs text-slate-500 mt-1">
             Ride In Progress

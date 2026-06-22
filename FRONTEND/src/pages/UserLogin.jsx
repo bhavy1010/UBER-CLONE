@@ -2,6 +2,8 @@ import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import axios from 'axios';
 import { UserDataContext } from '../context/UserContext';
+import quickRideLogo from "../assets/QuickRide-logo-white.jpeg";
+
 
 const App = () => {
 
@@ -84,10 +86,10 @@ const App = () => {
                 <div className="mb-10">
 
                     <img
-                        className="w-20 mb-8"
-                        src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png"
-                        alt="Uber Logo"
-                    />
+                                className="h-6"
+                              src={quickRideLogo}
+                              alt="QuickRide"
+                          />
 
                     <h1 className="text-4xl font-bold text-gray-900">
                         Welcome Back

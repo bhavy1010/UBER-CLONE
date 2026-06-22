@@ -7,6 +7,8 @@ import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { useSocket } from '../context/SocketContext';
 import { CaptainDataContext } from '../context/CaptainContext';
+import quickRideLogo from "../assets/QuickRide-logo-white.jpeg";
+
 
 const CaptainHome = () => {
 
@@ -178,11 +180,11 @@ const CaptainHome = () => {
 
                 <div>
 
-                    <img
-                        className="h-7"
-                        src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png"
-                        alt="uber"
-                    />
+                   <img
+                               className="h-6"
+                             src={quickRideLogo}
+                             alt="QuickRide"
+                         />
 
                     <p className="text-xs text-slate-500 mt-1">
                         Captain Dashboard

@@ -11,6 +11,7 @@ import LookingForDriver from '../components/LookingForDriver';
 import WaitingForDriver from '../components/WaitingForDriver';
 import { useSocket } from '../context/SocketContext';
 import { UserDataContext } from '../context/UserContext';
+import quickRideLogo from "../assets/QuickRide-logo-white.jpeg";
 
 const Home = () => {
 
@@ -386,11 +387,11 @@ return () => {
 
         <div className="bg-white/95 backdrop-blur-md rounded-3xl shadow-lg px-4 py-3">
 
-          <img
-            className="h-8"
-            src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png"
-            alt="Uber"
-          />
+         <img
+            className="h-6"
+          src={quickRideLogo}
+          alt="QuickRide"
+      />
 
           <p className="text-xs text-slate-500 mt-1">
             Find your next ride
