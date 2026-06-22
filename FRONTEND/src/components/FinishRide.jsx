@@ -28,8 +28,14 @@ const FinishRide = ({
         ride?.fare || 0;
 
     const completeRide = async () => {
+        console.log(
+        "TOKEN FROM LOCALSTORAGE:",
+        localStorage.getItem("token")
+    );
 
         try {
+
+            const token = localStorage.getItem("token");
 
             await axios.post(
                 `${import.meta.env.VITE_BASE_URL}/captains/update-stats`,
@@ -38,8 +44,7 @@ const FinishRide = ({
                 },
                 {
                     headers: {
-                        Authorization:
-                            `Bearer ${localStorage.getItem("token")}`
+                        Authorization: `Bearer ${token}`
                     }
                 }
             );

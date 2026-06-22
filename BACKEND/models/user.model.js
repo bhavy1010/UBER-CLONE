@@ -12,69 +12,58 @@ const allowedDomains = [
     "protonmail.com"
 ];
 
-const userSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema(
+    {
+        fullname: {
+            firstname: {
+                type: String,
+                required: true,
+                minlength: [3, "First name must be at least 3 characters"]
+            },
 
-    fullname: {
-        firstname: {
-            type: String,
-            required: true,
-            minlength: [3, "First name must be at least 3 characters"]
+            lastname: {
+                type: String,
+                default: ""
+            }
         },
 
-        lastname: {
+        email: {
             type: String,
-            minlength: [3, "Last name must be at least 3 characters"]
+            required: true,
+            unique: true,
+            lowercase: true,
+            trim: true,
+
+            validate: {
+                validator: function (email) {
+
+                    const domain =
+                        email.split("@")[1]?.toLowerCase();
+
+                    return allowedDomains.includes(domain);
+
+                },
+
+                message:
+                    "Please use a valid email provider"
+            }
+        },
+
+        password: {
+            type: String,
+            required: true,
+            select: false
+        },
+
+        socketId: {
+            type: String
         }
+
     },
-
-    email: {
-        type: String,
-        required: true,
-        unique: true,
-        lowercase: true,
-        trim: true,
-
-        validate: {
-            validator: function (email) {
-
-                const domain =
-                    email.split("@")[1];
-
-                return allowedDomains.includes(
-                    domain
-                );
-            },
-
-            message:
-                "Please use a valid email provider"
-        }
-    },
-
-    password: {
-        type: String,
-        required: true,
-
-        validate: {
-            validator: function (password) {
-
-                return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&^#])[A-Za-z\d@$!%*?&^#]{8,}$/.test(
-                    password
-                );
-            },
-
-            message:
-                "Password must contain 8 characters, 1 uppercase, 1 lowercase, 1 number and 1 special character"
-        }
-    },
-
-    socketId: {
-        type: String
+    {
+        timestamps: true
     }
-
-},
-{
-    timestamps: true
-});
+);
 
 userSchema.methods.generateAuthToken =
 function () {
@@ -88,6 +77,7 @@ function () {
             expiresIn: "24h"
         }
     );
+
 };
 
 userSchema.methods.comparePassword =
@@ -97,6 +87,7 @@ async function (password) {
         password,
         this.password
     );
+
 };
 
 userSchema.statics.hashPassword =
@@ -106,10 +97,10 @@ async function (password) {
         password,
         10
     );
+
 };
 
-const userModel =
-mongoose.model(
+const userModel = mongoose.model(
     "user",
     userSchema
 );

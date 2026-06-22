@@ -5,47 +5,43 @@ const jwt = require("jsonwebtoken");
 
 module.exports.authUser = async (req, res, next) => {
 
-    console.log("========== AUTH USER ==========");
-    console.log("Authorization Header:", req.headers.authorization);
-
-    const token =
-        req.cookies?.token ||
-        req.headers.authorization?.split(" ")[1];
-
-    console.log("Extracted Token:", token);
-
-    if (!token) {
-        return res.status(401).json({
-            error: "Unauthorized"
-        });
-    }
-
-    const isBlacklisted = await blacklistTokenModel.findOne({ token });
-
-    console.log("Blacklisted:", isBlacklisted);
-
-    if (isBlacklisted) {
-        return res.status(401).json({
-            error: "Unauthorized"
-        });
-    }
-
     try {
+
+        const token =
+            req.cookies?.token ||
+            req.headers.authorization?.split(" ")[1];
+
+        console.log("========== AUTH USER ==========");
+        console.log("TOKEN:", token);
+
+        if (!token) {
+            return res.status(401).json({
+                error: "Unauthorized - No Token"
+            });
+        }
+
+        const isBlacklisted =
+            await blacklistTokenModel.findOne({ token });
+
+        if (isBlacklisted) {
+            return res.status(401).json({
+                error: "Token Blacklisted"
+            });
+        }
 
         const decoded = jwt.verify(
             token,
             process.env.JWT_SECRET
         );
 
-        console.log("Decoded JWT:", decoded);
+        console.log("DECODED:", decoded);
 
-        const user = await userModel.findById(decoded._id);
-
-        console.log("Found User:", user);
+        const user =
+            await userModel.findById(decoded._id);
 
         if (!user) {
             return res.status(401).json({
-                error: "Unauthorized"
+                error: "User Not Found"
             });
         }
 
@@ -53,64 +49,83 @@ module.exports.authUser = async (req, res, next) => {
 
         next();
 
-    } catch (err) {
+    } catch (error) {
 
-        console.log("JWT ERROR:", err.message);
+        console.log("AUTH USER ERROR:", error.message);
 
         return res.status(401).json({
-            error: "Unauthorized"
+            error: error.message
         });
 
     }
+
 };
 
 module.exports.authCaptain = async (req, res, next) => {
 
-    const token =
-        req.cookies?.token ||
-        req.headers.authorization?.split(" ")[1];
-
-        
-
-
-    if (!token) {
-        return res.status(401).json({
-            error: "Unauthorized"
-        });
-    }
-
-    const isBlacklisted = await blacklistTokenModel.findOne({ token });
-
-    if (isBlacklisted) {
-        return res.status(401).json({
-            error: "Unauthorized"
-        });
-    }
-
     try {
+
+        console.log("========== AUTH CAPTAIN ==========");
+
+        const token =
+            req.cookies?.token ||
+            req.headers.authorization?.split(" ")[1];
+
+        console.log("TOKEN:", token);
+
+        if (!token) {
+
+            return res.status(401).json({
+                error: "Unauthorized - No Token"
+            });
+
+        }
+
+        const isBlacklisted =
+            await blacklistTokenModel.findOne({ token });
+
+        console.log("BLACKLISTED:", isBlacklisted);
+
+        if (isBlacklisted) {
+
+            return res.status(401).json({
+                error: "Token Blacklisted"
+            });
+
+        }
 
         const decoded = jwt.verify(
             token,
             process.env.JWT_SECRET
         );
 
-        const captain = await captainModel.findById(decoded._id);
+        console.log("DECODED:", decoded);
+
+        const captain =
+            await captainModel.findById(decoded._id);
+
+        console.log("CAPTAIN FOUND:", captain);
 
         if (!captain) {
+
             return res.status(401).json({
-                error: "Unauthorized"
+                error: "Captain Not Found"
             });
+
         }
 
         req.captain = captain;
 
         next();
 
-    } catch (err) {
+    } catch (error) {
+
+        console.log("AUTH CAPTAIN ERROR:", error.message);
 
         return res.status(401).json({
-            error: "Unauthorized"
+            error: error.message
         });
 
     }
+
 };

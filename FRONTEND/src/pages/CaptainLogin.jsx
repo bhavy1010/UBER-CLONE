@@ -35,10 +35,10 @@ const App = () => {
 
                 const responseData = response.data;
 
-                localStorage.setItem(
-                    'token',
-                    responseData.token
-                );
+            localStorage.setItem(
+            'captainToken',
+            responseData.token
+        );
 
                 setCaptain(
                     responseData.captain
