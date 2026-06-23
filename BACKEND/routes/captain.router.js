@@ -125,6 +125,10 @@ router.get(
 
 router.post(
     "/update-stats",
+    (req, res, next) => {
+        console.log("UPDATE-STATS ROUTE HIT");
+        next();
+    },
     authMiddleware.authCaptain,
     captainController.updateStats
 );

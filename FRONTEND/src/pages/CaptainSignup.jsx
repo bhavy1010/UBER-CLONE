@@ -20,10 +20,14 @@ const CaptainSignup = () => {
     const [vehiclePlate, setVehiclePlate] = useState('');
     const [vehicleCapacity, setVehicleCapacity] = useState('');
     const [vehicleType, setVehicleType] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
     const submitHandler = async (e) => {
 
         e.preventDefault();
+
+        setIsLoading(true);
+        setErrorMessage('');
 
         const captainData = {
             fullname: {
@@ -51,7 +55,7 @@ const CaptainSignup = () => {
 
                 const data = response.data;
 
-                localStorage.setItem('token', data.token);
+                localStorage.setItem('captainToken', data.token);
 
                 setCaptain(data.captain);
 
@@ -77,10 +81,14 @@ const CaptainSignup = () => {
             } else {
 
                 setErrorMessage(
-                    "Something went wrong"
+                    "Connection failed. Please check your internet and try again."
                 );
 
             }
+
+        } finally {
+
+            setIsLoading(false);
 
         }
 
@@ -272,9 +280,10 @@ const CaptainSignup = () => {
 
                     <button
                         type="submit"
-                        className="w-full bg-black text-white py-4 rounded-2xl text-lg font-semibold mt-5"
+                        disabled={isLoading}
+                        className="w-full bg-black text-white py-4 rounded-2xl text-lg font-semibold mt-5 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                        Create Captain Account
+                        {isLoading ? 'Creating Account...' : 'Create Captain Account'}
                     </button>
 
                     <p className="text-center text-sm text-gray-500 mt-5">

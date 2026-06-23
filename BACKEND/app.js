@@ -42,5 +42,14 @@ app.use("/maps", mapRoutes);
 app.use("/rides", rideRoutes); // NEW
 app.use("/payments", paymentRoutes);
 app.use("/ratings", ratingRoutes);
+app.get("/test-captains", async (req, res) => {
+
+    const captainModel = require("./models/captain.model");
+
+    const captains = await captainModel.find();
+
+    res.json(captains);
+
+});
 
 module.exports = app;

@@ -15,10 +15,14 @@ const App = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [userData, setUserData] = useState({});
+    const [isLoading, setIsLoading] = useState(false);
 
     const submitHandler = async (e) => {
 
         e.preventDefault();
+
+        setIsLoading(true);
+        setErrorMessage('');
 
         const data = {
             email,
@@ -36,8 +40,10 @@ const App = () => {
 
                 const responseData = response.data;
 
+               localStorage.removeItem("captainToken");
+
                 localStorage.setItem(
-                    'token',
+                    "token",
                     responseData.token
                 );
 
@@ -65,10 +71,14 @@ const App = () => {
             } else {
 
                 setErrorMessage(
-                    "Something went wrong"
+                    "Connection failed. Please check your internet and try again."
                 );
 
             }
+
+        } finally {
+
+            setIsLoading(false);
 
         }
 
@@ -164,9 +174,10 @@ const App = () => {
 
                     <button
                         type="submit"
-                        className="w-full bg-black text-white py-4 rounded-2xl font-semibold text-lg hover:scale-[0.99] transition-all"
+                        disabled={isLoading}
+                        className="w-full bg-black text-white py-4 rounded-2xl font-semibold text-lg hover:scale-[0.99] transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                     >
-                        Login
+                        {isLoading ? 'Logging in...' : 'Login'}
                     </button>
 
                     <p className="text-center text-sm text-gray-500 mt-5">

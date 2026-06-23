@@ -133,16 +133,21 @@ module.exports.logoutCaptain = async (req, res, next) => {
 module.exports.updateStats = async (req, res) => {
     try {
 
+        console.log("REQ CAPTAIN:", req.captain);
+        console.log("FARE:", req.body.fare);
+
         const captain = req.captain;
 
         captain.totalEarnings =
-            (captain.totalEarnings || 0) +
+            Number(captain.totalEarnings || 0) +
             Number(req.body.fare || 0);
 
         captain.totalTrips =
-            (captain.totalTrips || 0) + 1;
+            Number(captain.totalTrips || 0) + 1;
 
         await captain.save();
+
+        console.log("UPDATED CAPTAIN:", captain);
 
         res.status(200).json({
             success: true,
@@ -150,6 +155,8 @@ module.exports.updateStats = async (req, res) => {
         });
 
     } catch (error) {
+
+        console.log("UPDATE STATS ERROR:", error);
 
         res.status(500).json({
             success: false,

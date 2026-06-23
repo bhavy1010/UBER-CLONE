@@ -16,10 +16,14 @@ const UserSignup = () => {
     const [lastname, setLastname] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
     const submitHandler = async (e) => {
 
         e.preventDefault();
+
+        setIsLoading(true);
+        setErrorMessage('');
 
         const newUser = {
             fullname: {
@@ -70,10 +74,14 @@ const UserSignup = () => {
             } else {
 
                 setErrorMessage(
-                    "Something went wrong"
+                    "Connection failed. Please check your internet and try again."
                 );
 
             }
+
+        } finally {
+
+            setIsLoading(false);
 
         }
 
@@ -206,9 +214,10 @@ const UserSignup = () => {
 
                     <button
                         type="submit"
-                        className="w-full bg-black text-white py-4 rounded-2xl font-semibold text-lg"
+                        disabled={isLoading}
+                        className="w-full bg-black text-white py-4 rounded-2xl font-semibold text-lg disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                        Create Account
+                        {isLoading ? 'Creating Account...' : 'Create Account'}
                     </button>
 
                     <p className="text-center text-sm text-gray-500 mt-5">

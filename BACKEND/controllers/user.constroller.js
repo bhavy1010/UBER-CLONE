@@ -56,47 +56,45 @@ module.exports.registerUser = async (req, res) => {
 };
 
 module.exports.loginUser = async (req, res) => {
+
     try {
-
-        const errors = validationResult(req);
-
-        if (!errors.isEmpty()) {
-            return res.status(400).json({
-                errors: errors.array()
-            });
-        }
 
         const { email, password } = req.body;
 
-        const user =
-            await userService.findUserByEmail(
-                email.toLowerCase()
-            );
+        console.log("LOGIN EMAIL:", email);
+
+        const user = await userService.findUserByEmail(
+            email.toLowerCase()
+        );
+
+        console.log("USER FOUND:", user);
 
         if (!user) {
+
+            console.log("USER NOT FOUND");
+
             return res.status(401).json({
                 error: "Invalid email or password"
             });
+
         }
 
         const isMatch =
             await user.comparePassword(password);
 
+        console.log("PASSWORD MATCH:", isMatch);
+
         if (!isMatch) {
+
+            console.log("PASSWORD INCORRECT");
+
             return res.status(401).json({
                 error: "Invalid email or password"
             });
+
         }
 
-        const token =
-            user.generateAuthToken();
-
-        res.cookie("token", token, {
-            httpOnly: true,
-            secure: false,
-            sameSite: "lax",
-            maxAge: 24 * 60 * 60 * 1000
-        });
+        const token = user.generateAuthToken();
 
         res.status(200).json({
             token,
@@ -112,6 +110,7 @@ module.exports.loginUser = async (req, res) => {
         });
 
     }
+
 };
 
 module.exports.getUserProfile = async (req, res) => {

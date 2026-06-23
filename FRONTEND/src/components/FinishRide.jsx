@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { CaptainDataContext } from '../context/CaptainContext';
@@ -8,11 +8,14 @@ const FinishRide = ({
     setFinishRidePanel
 }) => {
 
+
     const navigate = useNavigate();
 
     const { captain, setCaptain } =
         useContext(CaptainDataContext);
 
+    const [isLoading, setIsLoading] = useState(false);
+    
     const passengerName =
         ride?.user?.fullname
             ? `${ride.user.fullname.firstname} ${ride.user.fullname.lastname}`
@@ -28,40 +31,127 @@ const FinishRide = ({
         ride?.fare || 0;
 
     const completeRide = async () => {
+
+    setIsLoading(true);
+
+    try {
+
+        const token =
+            localStorage.getItem("captainToken");
+
         console.log(
-        "TOKEN FROM LOCALSTORAGE:",
-        localStorage.getItem("token")
-    );
+            "END RIDE TOKEN:",
+            token
+        );
 
-        try {
+        if (!token) {
 
-            const token = localStorage.getItem("token");
+            alert(
+                "Session expired. Please login again."
+            );
 
+            navigate("/captain-login");
+
+            return;
+        }
+
+        console.log(
+            "REQUEST URL:",
+            `${import.meta.env.VITE_BASE_URL}/captains/update-stats`
+        );
+
+        const updateResponse =
             await axios.post(
                 `${import.meta.env.VITE_BASE_URL}/captains/update-stats`,
                 {
-                    fare: ride?.fare || 0
+                    fare: ride?.fare || 0,
+                    rideId: ride?._id
                 },
                 {
                     headers: {
-                        Authorization: `Bearer ${token}`
+                        Authorization:
+                            `Bearer ${token}`
                     }
                 }
             );
 
-            localStorage.removeItem(
-                "currentRide"
+        console.log(
+            "UPDATE RESPONSE:",
+            updateResponse.data
+        );
+
+        const profileResponse =
+            await axios.get(
+                `${import.meta.env.VITE_BASE_URL}/captains/profile`,
+                {
+                    headers: {
+                        Authorization:
+                            `Bearer ${token}`
+                    }
+                }
             );
 
-            navigate("/captain-home");
+        console.log(
+            "UPDATED PROFILE:",
+            profileResponse.data
+        );
 
-        } catch (error) {
+        setCaptain(
+            profileResponse.data
+        );
 
-            console.log(error);
+        localStorage.removeItem(
+            "currentRide"
+        );
 
+        navigate("/captain-home");
+
+    } catch (error) {
+
+        console.log(
+            "STATUS:",
+            error.response?.status
+        );
+
+        console.log(
+            "DATA:",
+            error.response?.data
+        );
+
+        console.log(
+            "FULL ERROR:",
+            error
+        );
+
+        if (
+            error.response?.status === 401
+        ) {
+
+            alert(
+                error.response?.data?.error ||
+                "Authentication failed"
+            );
+
+            navigate(
+                "/captain-login"
+            );
+
+            return;
         }
 
-    };
+        alert(
+            error.response?.data?.message ||
+            "Failed to complete ride"
+        );
+
+    } finally {
+
+        setIsLoading(false);
+
+    }
+
+};
+
 
     return (
     <div className='h-full overflow-y-auto pb-5'>
@@ -241,12 +331,27 @@ const FinishRide = ({
 
         {/* Button */}
 
-        <button
-            onClick={completeRide}
-            className='w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white font-semibold py-3 rounded-2xl shadow-lg'
-        >
-            End Ride
-        </button>
+       <button
+    onClick={completeRide}
+    disabled={isLoading}
+    className='w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white font-semibold py-3 rounded-2xl shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2'
+>
+    {
+        isLoading
+            ? (
+                <>
+                    <i className="ri-loader-4-line animate-spin"></i>
+                    Ending Ride...
+                </>
+            )
+            : (
+                <>
+                    <i className="ri-check-double-line"></i>
+                    End Ride
+                </>
+            )
+    }
+</button>
 
     </div>
 );

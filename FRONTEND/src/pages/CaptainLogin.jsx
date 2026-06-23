@@ -15,10 +15,14 @@ const App = () => {
     const [password, setPassword] = useState('');
     const [captainData, setCaptainData] = useState({});
     const [errorMessage, setErrorMessage] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
     const submitHandler = async (e) => {
 
         e.preventDefault();
+
+        setIsLoading(true);
+        setErrorMessage('');
 
         const data = {
             email,
@@ -36,16 +40,18 @@ const App = () => {
 
                 const responseData = response.data;
 
-            localStorage.setItem(
-            'captainToken',
-            responseData.token
-        );
+                // localStorage.removeItem("token");
+
+                localStorage.setItem(
+                    "captainToken",
+                    responseData.token
+                );
 
                 setCaptain(
                     responseData.captain
                 );
 
-                navigate('/captain-home');
+                navigate("/captain-home");
             }
 
         } catch (error) {
@@ -71,10 +77,14 @@ const App = () => {
             else {
 
                 setErrorMessage(
-                    "Something went wrong"
+                    "Connection failed. Please check your internet and try again."
                 );
 
             }
+
+        } finally {
+
+            setIsLoading(false);
 
         }
 
@@ -162,9 +172,10 @@ const App = () => {
 
                     <button
                         type="submit"
-                        className="w-full bg-black text-white py-4 rounded-2xl text-lg font-semibold shadow-lg"
+                        disabled={isLoading}
+                        className="w-full bg-black text-white py-4 rounded-2xl text-lg font-semibold shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                        Login as Captain
+                        {isLoading ? 'Logging in...' : 'Login as Captain'}
                     </button>
 
                     <p className="text-center text-sm text-gray-500 mt-5">

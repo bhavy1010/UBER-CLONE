@@ -5,10 +5,11 @@ import { useNavigate } from "react-router-dom";
 const RatingPage = () => {
 
     const navigate = useNavigate();
+    const rideData = localStorage.getItem("currentRide");
 
-    const ride = JSON.parse(
-        localStorage.getItem("currentRide")
-    );
+    const ride = rideData
+    ? JSON.parse(rideData)
+    : null;
 
     const [comfort, setComfort] = useState(0);
     const [price, setPrice] = useState(0);
